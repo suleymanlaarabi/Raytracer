@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check_workflow_conditions:
+    name: Check if the workflow respect correct conditions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if MIRROR_URL exist
+        if: ${{ vars.MIRROR_URL == '' }}
+        run: |
+          echo "The variable MIRROR_URL doesn't exist !"
+          exit 1
+
+      - name: Set MIRROR_REPO
+        run: echo "MIRROR_REPO=$(echo ${{ vars.MIRROR_URL }} | cut -c 16- | rev | cut -c 5- | rev)" >> $GITHUB_ENV
+
+      - name: Checkout source code
+        if: ${{ github.repository == env.MIRROR_REPO }}
+        run: |
+          echo "You're trying to run workflow on the mirror repository !"
+          exit 1
+
+  build_and_test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Run tests
+        run: cargo test --verbose
+
+  push_to_mirror:
+    name: Push to a mirror repository
+    if: ${{ github.ref_name == 'main' }}
+    needs: [ check_workflow_conditions, build_and_test ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ env.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa $(echo ${{ vars.MIRROR_URL }} | cut -d':' -f1 | cut -d'@' -f2) >> ~/.ssh/known_hosts
+        env:
+          SSH_KEY: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+
+      - name: Remove .github directory
+        run: |
+          git filter-branch --force --index-filter 'git rm -r --cached --ignore-unmatch .github' --prune-empty --tag-name-filter cat -- --all
+          git gc --prune=now
+          git clean -fd
+
+      - name: Verify Repository
+        run: |
+          git fsck --full || echo "Git fsck completed with warnings"
+          git gc || echo "Git gc completed with warnings"
+
+      - name: Push to mirror
+        run: |
+          git remote add -f mirror ${{ vars.MIRROR_URL }}
+          git push mirror --mirror --prune --force
+          echo "Successfully mirrored to ${{ vars.MIRROR_URL }}"
