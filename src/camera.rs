@@ -1,10 +1,14 @@
+use serde::Deserialize;
+
 use crate::vec3::{Position, Rotation, Vec3};
 
+#[derive(Deserialize, Debug)]
 pub struct Resolution {
     pub width: u32,
     pub height: u32,
 }
 
+#[derive(Deserialize, Debug)]
 pub struct Camera {
     pub position: Position,
     pub rotation: Rotation,
