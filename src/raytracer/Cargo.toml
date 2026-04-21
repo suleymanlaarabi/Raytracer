@@ -1,0 +1,18 @@
+[package]
+name = "raytracer"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "raytracer"
+path = "main.rs"
+
+[lib]
+name = "raytracer"
+path = "lib.rs"
+
+[dependencies]
+config = { version = "0.15.22", features = ["ron"] }
+ron = "0.12.1"
+serde = { version = "1.0.228", features = ["derive"] }
+libloading = "0.8"

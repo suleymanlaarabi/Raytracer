@@ -1,9 +1,6 @@
-[package]
-name = "Raytracer"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-config = "0.15.22"
-ron = "*"
-serde = {version = "*", features = ["derive"]}
+[workspace]
+members = [
+    "src/raytracer",
+    "src/primitives/sphere",
+]
+resolver = "2"

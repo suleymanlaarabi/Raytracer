@@ -1,6 +1,5 @@
 use serde::Deserialize;
-
-use crate::vec3::{Position, Rotation, Vec3};
+use crate::maths::vec3::{Position, Rotation, Vec3};
 
 #[derive(Deserialize, Debug)]
 pub struct Resolution {

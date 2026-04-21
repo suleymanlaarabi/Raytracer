@@ -1,4 +1,4 @@
-use crate::vec3::{Direction, Position};
+use crate::maths::vec3::{Direction, Position};
 
 pub struct Ray {
     pub position: Position,
@@ -7,14 +7,14 @@ pub struct Ray {
 
 impl Ray {
     pub const fn new(position: Position, direction: Direction) -> Self {
-        return Self {
+        Self {
             position,
             direction,
-        };
+        }
     }
 
     pub fn hit(&self, hittable: &Box<dyn CanHit>) -> bool {
-        return hittable.hit(self);
+        hittable.hit(self)
     }
 }
 

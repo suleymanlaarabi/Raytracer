@@ -1,12 +1,9 @@
 use std::io::Write;
 
-use crate::{
-    camera::Camera,
-    color::Color,
-    primitives::sphere::Sphere,
-    ray::{CanHit, Ray},
-    vec3::{Position, Vec3},
-};
+use crate::maths::vec3::{Vec3};
+use crate::camera::camera::Camera;
+use crate::rendering::color::Color;
+use crate::rendering::ray::{CanHit, Ray};
 
 #[derive(Default)]
 pub struct Scene {
@@ -78,8 +75,14 @@ impl Scene {
         }
     }
 
-    pub fn add_sphere(&mut self, position: Position, radius: f32) {
-        self.primitives
-            .push(Box::new(Sphere::new(position, radius)));
+    pub fn new(camera: Camera) -> Self {
+        Self {
+            primitives: Vec::new(),
+            camera,
+        }
+    }
+
+    pub fn add_primitive(&mut self, primitive: Box<dyn CanHit>) {
+        self.primitives.push(primitive);
     }
 }

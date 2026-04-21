@@ -5,6 +5,14 @@ SceneDesc(
         resolution: (1920, 1080),
         fov: 1
     ),
-    primitives: [],
-    lights: []
+    primitives: [
+        (
+            kind: "sphere",
+            config: (
+                position: (0, 0, -3),
+                radius: 1.0,
+            ),
+        ),
+    ],
+    lights: [],
 )
