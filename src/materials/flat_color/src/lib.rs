@@ -1,4 +1,4 @@
-use raytracer::material::{CanShade, Material};
+use raytracer::materials::{CanShade, Material};
 use raytracer::rendering::color::Color;
 use raytracer::rendering::ray::HitRecord;
 use serde::Deserialize;

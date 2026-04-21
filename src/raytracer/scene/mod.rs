@@ -1,7 +1,7 @@
 use std::io::Write;
 
 use crate::camera::Camera;
-use crate::material::Material;
+use crate::materials::Material;
 use crate::maths::vec3::Vec3;
 use crate::primitives::Primitive;
 use crate::rendering::color::Color;

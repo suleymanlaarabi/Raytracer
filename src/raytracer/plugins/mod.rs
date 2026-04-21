@@ -1,6 +1,6 @@
+use crate::materials::Material;
+use crate::primitives::Primitive;
 use libloading::{Library, Symbol};
-use raytracer::material::Material;
-use raytracer::primitives::Primitive;
 use std::collections::HashMap;
 use std::error::Error;
 use std::path::PathBuf;
@@ -8,6 +8,7 @@ use std::path::PathBuf;
 type CreatePrimitiveFn = fn(&ron::Value) -> Primitive;
 type CreateMaterialFn = fn(&ron::Value) -> Material;
 
+#[derive(Default)]
 pub struct PluginLoader {
     primitive_libs: HashMap<String, Library>,
     material_libs: HashMap<String, Library>,

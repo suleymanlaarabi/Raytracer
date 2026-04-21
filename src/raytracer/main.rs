@@ -1,9 +1,7 @@
-mod loader;
-
-use loader::PluginLoader;
 use raytracer::camera::Camera;
 use raytracer::errors::RaytracerError;
 use raytracer::errors::RaytracerError::IncorrectArguments;
+use raytracer::plugins::PluginLoader;
 use raytracer::scene::Scene;
 use serde::Deserialize;
 use std::env::args;
