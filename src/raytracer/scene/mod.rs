@@ -50,7 +50,7 @@ impl Scene {
                     if let Some(hit) = ray.hit(primitive.as_ref()) {
                         let is_closer = closest
                             .as_ref()
-                            .map_or(true, |(prev_t, _, _)| hit.t < *prev_t);
+                            .is_none_or(|(prev_t, _, _)| hit.t < *prev_t);
                         if is_closer {
                             closest = Some((hit.t, hit, material.as_ref()));
                         }
