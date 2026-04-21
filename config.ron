@@ -12,6 +12,12 @@ SceneDesc(
                 position: (0, 0, -3),
                 radius: 1.0,
             ),
+            material: (
+                kind: "flat_color",
+                config: (
+                    color: (0, 128, 0),
+                ),
+            ),
         ),
     ],
     lights: [],
