@@ -1,0 +1,39 @@
+[camera]
+fov = 72.0
+
+[camera.resolution]
+width = 1920
+height = 1080
+
+[camera.position]
+x = 0.0
+y = -100.0
+z = 20.0
+
+[[primitives.spheres]]
+x = 60.0
+y = 5.0
+z = 40.0
+radius = 25.0
+color = { r = 255, g = 64, b = 64 }
+
+[[primitives.spheres]]
+x = -40.0
+y = 20.0
+z = -10.0
+radius = 35.0
+color = { r = 64, g = 255, b = 64 }
+
+[[primitives.planes]]
+axis = "Z"
+position = -20.0
+color = { r = 64, g = 64, b = 255 }
+
+[lights]
+ambient = 0.4
+diffuse = 0.6
+
+[[lights.point]]
+x = 400.0
+y = 100.0
+z = 500.0
