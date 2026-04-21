@@ -13,7 +13,7 @@ impl Ray {
         }
     }
 
-    pub fn hit(&self, hittable: &Box<dyn CanHit>) -> bool {
+    pub fn hit(&self, hittable: &dyn CanHit) -> bool {
         hittable.hit(self)
     }
 }

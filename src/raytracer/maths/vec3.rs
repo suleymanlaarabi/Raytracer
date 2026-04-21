@@ -106,7 +106,7 @@ impl Vec3 {
     pub const ZERO: Vec3 = Vec3::from_xyz(0., 0., 0.);
 
     pub const fn from_xyz(x: f32, y: f32, z: f32) -> Vec3 {
-        return Vec3 { x, y, z };
+        Vec3 { x, y, z }
     }
 
     pub fn length(&self) -> f32 {
@@ -123,10 +123,10 @@ impl Vec3 {
     }
 
     pub fn distance(&self, other: &Vec3) -> f32 {
-        return ((self.x - other.x) * (self.x - other.x)
+        ((self.x - other.x) * (self.x - other.x)
             + (self.y - other.y) * (self.y - other.y)
             + (self.z - other.z) * (self.z - other.z))
-            .sqrt();
+            .sqrt()
     }
 
     pub fn project(&self, value: f32) -> Vec3 {

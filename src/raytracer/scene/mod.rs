@@ -1,7 +1,8 @@
 use std::io::Write;
 
-use crate::maths::vec3::{Vec3};
-use crate::camera::camera::Camera;
+use crate::camera::Camera;
+use crate::maths::vec3::Vec3;
+use crate::primitives::Primitive;
 use crate::rendering::color::Color;
 use crate::rendering::ray::{CanHit, Ray};
 
@@ -42,7 +43,7 @@ impl Scene {
                 let mut color = Color::BLACK;
 
                 for sphere in &self.primitives {
-                    if ray.hit(sphere) {
+                    if ray.hit(sphere.as_ref()) {
                         color = Color::RED;
                         break;
                     }
@@ -82,7 +83,7 @@ impl Scene {
         }
     }
 
-    pub fn add_primitive(&mut self, primitive: Box<dyn CanHit>) {
+    pub fn add_primitive(&mut self, primitive: Primitive) {
         self.primitives.push(primitive);
     }
 }

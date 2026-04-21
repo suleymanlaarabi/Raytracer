@@ -1,17 +1,17 @@
 use libloading::{Library, Symbol};
+use raytracer::camera::Camera;
+use raytracer::primitives::Primitive;
 use serde::Deserialize;
 
-use raytracer::camera::camera::Camera;
-use raytracer::errors::errors::RaytracerError;
-use raytracer::errors::errors::RaytracerError::IncorrectArguments;
-use raytracer::rendering::ray::CanHit;
+use raytracer::errors::RaytracerError;
+use raytracer::errors::RaytracerError::IncorrectArguments;
 use raytracer::scene::Scene;
 use std::collections::HashMap;
 use std::env::args;
 use std::error::Error;
 use std::path::PathBuf;
 
-type CreateFn = fn(&ron::Value) -> Box<dyn CanHit>;
+type CreateFn = fn(&ron::Value) -> Primitive;
 
 fn get_config_file() -> Result<String, RaytracerError> {
     let mut args = args().collect::<Vec<String>>();

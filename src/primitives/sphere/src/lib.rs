@@ -1,3 +1,4 @@
+use raytracer::primitives::Primitive;
 use serde::Deserialize;
 
 use raytracer::maths::vec3::{Position, Vec3, dot};
@@ -38,7 +39,7 @@ struct SphereConfig {
 }
 
 #[unsafe(no_mangle)]
-pub fn create(cfg: &ron::Value) -> Box<dyn CanHit> {
+pub fn create(cfg: &ron::Value) -> Primitive {
     let config: SphereConfig = cfg.clone().into_rust().expect("invalid sphere config");
     println!("Hello non");
     Box::new(Sphere::new(config.position, config.radius))
