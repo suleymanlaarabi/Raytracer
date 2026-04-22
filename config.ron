@@ -19,6 +19,19 @@ SceneDesc(
                 ),
             ),
         ),
+        (
+            kind: "plane",
+            config: (
+                position: (1, 0.8, 1),
+                normal: (0.0, 1.0, 0.0),
+            ),
+            material: (
+                kind: "flat_color",
+                config: (
+                    color: (128, 0, 0),
+                ),
+            ),
+        ),
     ],
     lights: [],
 )
