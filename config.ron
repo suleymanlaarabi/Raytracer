@@ -9,7 +9,7 @@ SceneDesc(
         (
             kind: "sphere",
             config: (
-                position: (0, 0, -3),
+                position: (2, 0, -3),
                 radius: 1.0,
             ),
             material: (
@@ -19,6 +19,19 @@ SceneDesc(
                 ),
             ),
         ),
+        (
+            kind: "obj",
+            config: (
+                position: (0, 0, -5),
+                path: "./assets/rect.obj"
+            ),
+            material: (
+                kind: "flat_color",
+                config: (
+                    color: (255, 0, 0)
+                )
+            )
+        )
     ],
     lights: [],
 )
