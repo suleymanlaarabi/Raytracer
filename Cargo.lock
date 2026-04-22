@@ -340,6 +340,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "raytracer_material_flat_color"
+version = "0.1.0"
+dependencies = [
+ "raytracer",
+ "ron",
+ "serde",
+]
+
+[[package]]
 name = "raytracer_sphere"
 version = "0.1.0"
 dependencies = [

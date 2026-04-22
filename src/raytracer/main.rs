@@ -1,32 +1,31 @@
-use libloading::{Library, Symbol};
 use raytracer::camera::Camera;
-use raytracer::primitives::Primitive;
-use serde::Deserialize;
-
 use raytracer::errors::RaytracerError;
 use raytracer::errors::RaytracerError::IncorrectArguments;
+use raytracer::plugins::PluginLoader;
 use raytracer::scene::Scene;
-use std::collections::HashMap;
+use serde::Deserialize;
 use std::env::args;
 use std::error::Error;
-use std::path::PathBuf;
-
-type CreateFn = fn(&ron::Value) -> Primitive;
 
 fn get_config_file() -> Result<String, RaytracerError> {
     let mut args = args().collect::<Vec<String>>();
-
     if args.len() != 2 {
         return Err(IncorrectArguments);
     }
-
     Ok(args.remove(1))
+}
+
+#[derive(Deserialize)]
+struct MaterialDesc {
+    kind: String,
+    config: ron::Value,
 }
 
 #[derive(Deserialize)]
 struct PrimitiveDesc {
     kind: String,
     config: ron::Value,
+    material: MaterialDesc,
 }
 
 #[derive(Deserialize)]
@@ -35,10 +34,6 @@ struct SceneDesc {
     primitives: Vec<PrimitiveDesc>,
     lights: Vec<ron::Value>,
     camera: Camera,
-}
-
-fn plugin_path(kind: &str) -> PathBuf {
-    PathBuf::from("plugins").join(format!("libraytracer_{kind}.so"))
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -50,17 +45,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let parsed = config.try_deserialize::<SceneDesc>()?;
 
-    let mut libraries: HashMap<String, Library> = HashMap::new();
+    let mut loader = PluginLoader::new();
     let mut scene = Scene::new(parsed.camera);
 
     for desc in &parsed.primitives {
-        if !libraries.contains_key(&desc.kind) {
-            let lib = unsafe { Library::new(plugin_path(&desc.kind))? };
-            libraries.insert(desc.kind.clone(), lib);
-        }
-        let lib = &libraries[&desc.kind];
-        let create: Symbol<CreateFn> = unsafe { lib.get(b"create")? };
-        scene.add_primitive(create(&desc.config));
+        let primitive = loader.load_primitive(&desc.kind, &desc.config)?;
+        let material = loader.load_material(&desc.material.kind, &desc.material.config)?;
+        scene.add_object(primitive, material);
     }
 
     scene.render_to_file("image.ppm");

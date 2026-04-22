@@ -2,5 +2,6 @@
 members = [
     "src/raytracer",
     "src/primitives/sphere",
+    "src/materials/flat_color",
 ]
 resolver = "2"

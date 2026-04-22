@@ -1,5 +1,11 @@
 use crate::maths::vec3::{Direction, Position};
 
+pub struct HitRecord {
+    pub t: f32,
+    pub point: Position,
+    pub normal: Direction,
+}
+
 pub struct Ray {
     pub position: Position,
     pub direction: Direction,
@@ -13,11 +19,11 @@ impl Ray {
         }
     }
 
-    pub fn hit(&self, hittable: &dyn CanHit) -> bool {
+    pub fn hit(&self, hittable: &dyn CanHit) -> Option<HitRecord> {
         hittable.hit(self)
     }
 }
 
 pub trait CanHit {
-    fn hit(&self, ray: &Ray) -> bool;
+    fn hit(&self, ray: &Ray) -> Option<HitRecord>;
 }

@@ -1,14 +1,15 @@
 use std::io::Write;
 
 use crate::camera::Camera;
+use crate::materials::Material;
 use crate::maths::vec3::Vec3;
 use crate::primitives::Primitive;
 use crate::rendering::color::Color;
-use crate::rendering::ray::{CanHit, Ray};
+use crate::rendering::ray::Ray;
 
 #[derive(Default)]
 pub struct Scene {
-    primitives: Vec<Box<dyn CanHit>>,
+    objects: Vec<(Primitive, Material)>,
     camera: Camera,
 }
 
@@ -40,14 +41,26 @@ impl Scene {
                     origin,
                     (lower_left_corner + u * horizontal + v * vertical - origin).normalize(),
                 );
-                let mut color = Color::BLACK;
 
-                for sphere in &self.primitives {
-                    if ray.hit(sphere.as_ref()) {
-                        color = Color::RED;
-                        break;
+                let mut closest = None;
+                for (primitive, material) in &self.objects {
+                    // TODO: actually need to check what object is the most closest
+                    // (en fr excuse pavel) il faudrait qu'on sorte les objet du plus proche aux plus loin de la camera
+                    // comme ca on pourrait sarreter aux premier hit pour chaque pixel
+                    if let Some(hit) = ray.hit(primitive.as_ref()) {
+                        let is_closer = closest
+                            .as_ref()
+                            .is_none_or(|(prev_t, _, _)| hit.t < *prev_t);
+                        if is_closer {
+                            closest = Some((hit.t, hit, material.as_ref()));
+                        }
                     }
                 }
+
+                let color = match closest {
+                    Some((_, hit, mat)) => mat.shade(&hit),
+                    None => Color::BLACK,
+                };
                 buffer.push(color);
             }
         }
@@ -78,12 +91,12 @@ impl Scene {
 
     pub fn new(camera: Camera) -> Self {
         Self {
-            primitives: Vec::new(),
+            objects: Vec::new(),
             camera,
         }
     }
 
-    pub fn add_primitive(&mut self, primitive: Primitive) {
-        self.primitives.push(primitive);
+    pub fn add_object(&mut self, primitive: Primitive, material: Material) {
+        self.objects.push((primitive, material));
     }
 }
