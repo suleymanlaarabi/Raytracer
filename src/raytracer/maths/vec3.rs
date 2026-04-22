@@ -102,6 +102,14 @@ pub fn dot(u: Vec3, v: Vec3) -> f32 {
     u.x * v.x + u.y * v.y + u.z * v.z
 }
 
+pub fn cross(u: Vec3, v: Vec3) -> Vec3 {
+    Vec3::from_xyz(
+        u.y * v.z - u.z * v.y,
+        u.z * v.x - u.x * v.z,
+        u.x * v.y - u.y * v.x,
+    )
+}
+
 impl Vec3 {
     pub const ZERO: Vec3 = Vec3::from_xyz(0., 0., 0.);
 
@@ -131,6 +139,18 @@ impl Vec3 {
 
     pub fn project(&self, value: f32) -> Vec3 {
         Vec3::from_xyz(self.x * value, self.y * value, self.z * value)
+    }
+
+    pub fn x(&self) -> f32 {
+        self.x
+    }
+
+    pub fn y(&self) -> f32 {
+        self.y
+    }
+
+    pub fn z(&self) -> f32 {
+        self.z
     }
 }
 
