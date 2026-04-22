@@ -1,4 +1,4 @@
-use crate::maths::vec3::{Position, Rotation, Vec3};
+use crate::maths::vec3::{Position, Rotation, Vec3, cross};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
@@ -13,6 +13,29 @@ pub struct Camera {
     pub rotation: Rotation,
     pub resolution: Resolution,
     pub fov: f32,
+}
+
+pub struct CameraBasis {
+    pub forward: Vec3,
+    pub right: Vec3,
+    pub up: Vec3,
+}
+
+impl Camera {
+    pub fn basis(&self) -> CameraBasis {
+        let pitch = self.rotation.x();
+        let yaw = self.rotation.y();
+        let forward = Vec3::from_xyz(
+            pitch.cos() * yaw.sin(),
+            -pitch.sin(),
+            -pitch.cos() * yaw.cos(),
+        )
+        .normalize();
+        let world_up = Vec3::from_xyz(0.0, 1.0, 0.0);
+        let right = cross(forward, world_up).normalize();
+        let up = cross(right, forward);
+        CameraBasis { forward, right, up }
+    }
 }
 
 impl Default for Camera {

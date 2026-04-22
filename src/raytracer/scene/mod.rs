@@ -2,7 +2,6 @@ use std::io::Write;
 
 use crate::camera::Camera;
 use crate::materials::Material;
-use crate::maths::vec3::Vec3;
 use crate::primitives::Primitive;
 use crate::rendering::color::Color;
 use crate::rendering::ray::Ray;
@@ -26,10 +25,15 @@ impl Scene {
         let focal_length = self.camera.fov;
 
         let origin = self.camera.position;
-        let horizontal = Vec3::from_xyz(viewport_width, 0.0, 0.0);
-        let vertical = Vec3::from_xyz(0.0, viewport_height, 0.0);
+        let basis = self.camera.basis();
+
+        // multiply by u (0→1) to move the radius from left to right on the viewport
+        let horizontal = basis.right * viewport_width;
+        // multiplied by v (0→1) to move the radius from bottom to top on the viewport
+        let vertical = basis.up * viewport_height;
+        // starting point of the interpolation: the radius (u=0, v=0) starts from here
         let lower_left_corner =
-            origin - horizontal / 2.0 - vertical / 2.0 - Vec3::from_xyz(0.0, 0.0, focal_length);
+            origin - horizontal / 2.0 - vertical / 2.0 + basis.forward * focal_length;
 
         buffer.clear();
         for y in 0..self.camera.resolution.height {
