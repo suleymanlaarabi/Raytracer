@@ -21,9 +21,11 @@ impl Scene {
 
         let aspect_ratio: f32 = width / height;
 
-        let viewport_height = 2.0;
+        let fov_rad = self.camera.fov.to_radians();
+
+        let focal_length = 1.0_f32;
+        let viewport_height = 2.0 * (fov_rad / 2.0).tan();
         let viewport_width = aspect_ratio * viewport_height;
-        let focal_length = self.camera.fov;
 
         let origin = self.camera.position;
         let horizontal = Vec3::from_xyz(viewport_width, 0.0, 0.0);
