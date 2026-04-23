@@ -1,8 +1,9 @@
 use raytracer::primitives::Primitive;
 use serde::Deserialize;
 
-use raytracer::maths::vec3::{Position, Vec3, dot};
+use raytracer::maths::vec3::{Vec3, dot};
 use raytracer::rendering::ray::{CanHit, HitRecord, Ray};
+use raytracer::rendering::transform::Transform;
 
 pub struct Plane {
     pub position: Vec3,
@@ -10,7 +11,7 @@ pub struct Plane {
 }
 
 impl CanHit for Plane {
-    fn hit(&self, ray: &Ray) -> Option<HitRecord> {
+    fn hit(&self, ray: &Ray, _transform: &Transform) -> Option<HitRecord> {
         let denominator = dot(self.normal, ray.direction);
         if denominator.abs() < 1e-6 { // if denominator equals 0, the ray is perpendicular to the normal
             return None;              // (therefore parallel to the plane), it does not touch it.
@@ -43,3 +44,5 @@ pub fn create(cfg: &ron::Value) -> Primitive {
     let config: PlaneConfig = cfg.clone().into_rust().expect("invalid plane config");
     Box::new(Plane::new(config.position, config.normal))
 }
+
+
