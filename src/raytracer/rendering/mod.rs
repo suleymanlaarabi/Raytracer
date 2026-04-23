@@ -19,7 +19,7 @@ pub struct Renderer {
 }
 
 #[inline]
-fn render_x(ray: &mut Ray, objects: &Vec<Object>, buffer: *mut [Color], x: usize) {
+fn render_x(ray: &mut Ray, objects: &[Object], row: &mut [Color], x: usize) {
     let mut closest = None;
     for (primitive, material, transform) in objects {
         if let Some(hit) = ray.hit(primitive.as_ref(), transform) {
@@ -32,13 +32,10 @@ fn render_x(ray: &mut Ray, objects: &Vec<Object>, buffer: *mut [Color], x: usize
         }
     }
 
-    let color = match closest {
+    row[x] = match closest {
         Some((_, hit, mat)) => mat.shade(&hit),
         None => Color::BLACK,
     };
-    unsafe {
-        (*buffer)[x] = color;
-    }
 }
 
 impl Renderer {
@@ -79,7 +76,7 @@ impl Renderer {
         let lower_left_corner =
             origin - horizontal / 2.0 - vertical / 2.0 + basis.forward * focal_length;
 
-        let objects = &self.scene.objects;
+        let objects: &[Object] = &self.scene.objects;
 
         let threads = thread::available_parallelism()
             .map(|n| n.get())
@@ -98,9 +95,6 @@ impl Renderer {
                 s.spawn(move || {
                     for (local_y, row) in rows.chunks_mut(screen_width).enumerate() {
                         let y = start_y + local_y;
-                        if y >= screen_height {
-                            break;
-                        }
 
                         let v = y as f32 / (screen_height - 1) as f32;
                         let mut ray = Ray::new(origin, Vec3::ZERO);
@@ -129,7 +123,7 @@ impl Renderer {
 
         let file = std::fs::File::create(path).expect("Failed to create file");
         let header = format!(
-            "P3\n{} {}\n255\n",
+            "P6\n{} {}\n255\n",
             self.scene.camera.resolution.width, self.scene.camera.resolution.height
         );
 
@@ -139,7 +133,7 @@ impl Renderer {
             .expect("Failed to write header");
 
         for color in &self.buffer {
-            writeln!(file, "{} {} {}", color.r, color.g, color.b)
+            file.write_all(&[color.r, color.g, color.b])
                 .expect("Failed to write pixel data");
         }
 
