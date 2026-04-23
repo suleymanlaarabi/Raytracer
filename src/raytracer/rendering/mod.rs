@@ -132,10 +132,10 @@ impl Renderer {
         file.write_all(header.as_bytes())
             .expect("Failed to write header");
 
-        for color in &self.buffer {
-            file.write_all(&[color.r, color.g, color.b])
-                .expect("Failed to write pixel data");
-        }
+        let bytes = unsafe {
+            std::slice::from_raw_parts(self.buffer.as_ptr() as *const u8, self.buffer.len() * 3)
+        };
+        file.write_all(bytes).expect("Failed to write pixel data");
 
         file.flush().expect("Failed to flush file");
     }
