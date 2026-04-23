@@ -1,4 +1,7 @@
-use std::{io::Write, thread};
+use std::{
+    io::{BufWriter, Write},
+    thread,
+};
 
 use crate::{
     maths::vec3::Vec3,
@@ -124,18 +127,22 @@ impl Renderer {
             panic!("Only .ppm format is supported");
         }
 
-        let mut file = std::fs::File::create(path).expect("Failed to create file");
+        let file = std::fs::File::create(path).expect("Failed to create file");
         let header = format!(
             "P3\n{} {}\n255\n",
             self.scene.camera.resolution.width, self.scene.camera.resolution.height
         );
+
+        let mut file = BufWriter::new(file);
+
         file.write_all(header.as_bytes())
             .expect("Failed to write header");
 
         for color in &self.buffer {
-            let pixel = format!("{} {} {}\n", color.r, color.g, color.b);
-            file.write_all(pixel.as_bytes())
+            writeln!(file, "{} {} {}", color.r, color.g, color.b)
                 .expect("Failed to write pixel data");
         }
+
+        file.flush().expect("Failed to flush file");
     }
 }
