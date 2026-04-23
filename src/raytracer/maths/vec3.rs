@@ -158,6 +158,33 @@ impl Vec3 {
     pub fn project(&self, value: f32) -> Vec3 {
         Vec3::from_xyz(self.x * value, self.y * value, self.z * value)
     }
+
+    #[inline]
+    pub fn rotate(&self, rotation: Rotation) -> Vec3 {
+        let rad_x = rotation.x.to_radians();
+        let rad_y = rotation.y.to_radians();
+        let rad_z = rotation.z.to_radians();
+
+        let cos_x = rad_x.cos();
+        let sin_x = rad_x.sin();
+        let y1 = self.y * cos_x - self.z * sin_x;
+        let z1 = self.y * sin_x + self.z * cos_x;
+        let x1 = self.x;
+
+        let cos_y = rad_y.cos();
+        let sin_y = rad_y.sin();
+        let x2 = x1 * cos_y + z1 * sin_y;
+        let z2 = -x1 * sin_y + z1 * cos_y;
+        let y2 = y1;
+
+        let cos_z = rad_z.cos();
+        let sin_z = rad_z.sin();
+        let x3 = x2 * cos_z - y2 * sin_z;
+        let y3 = x2 * sin_z + y2 * cos_z;
+        let z3 = z2;
+
+        Vec3::from_xyz(x3, y3, z3)
+    }
 }
 
 pub type Translation = Vec3;
