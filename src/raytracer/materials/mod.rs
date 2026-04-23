@@ -5,4 +5,4 @@ pub trait CanShade {
     fn shade(&self, hit: &HitRecord) -> Color;
 }
 
-pub type Material = Box<dyn CanShade>;
+pub type Material = Box<dyn CanShade + Send + Sync>;

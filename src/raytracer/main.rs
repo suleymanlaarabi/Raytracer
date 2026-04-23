@@ -3,6 +3,7 @@ use raytracer::errors::RaytracerError;
 use raytracer::errors::RaytracerError::IncorrectArguments;
 use raytracer::maths::vec3::Position;
 use raytracer::plugins::PluginLoader;
+use raytracer::rendering::Renderer;
 use raytracer::rendering::transform::Transform;
 use raytracer::scene::Scene;
 use serde::Deserialize;
@@ -60,7 +61,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         scene.add_object(primitive, material, desc.transform);
     }
 
-    scene.render_to_file("image.ppm");
+    let mut renderer = Renderer::from_scene(scene);
+
+    renderer.render_to_file("image.ppm");
 
     Ok(())
 }
