@@ -1,7 +1,10 @@
 use raytracer::camera::Camera;
 use raytracer::errors::RaytracerError;
 use raytracer::errors::RaytracerError::IncorrectArguments;
+use raytracer::maths::vec3::Position;
 use raytracer::plugins::PluginLoader;
+use raytracer::rendering::Renderer;
+use raytracer::rendering::transform::Transform;
 use raytracer::scene::Scene;
 use serde::Deserialize;
 use std::env::args;
@@ -26,6 +29,8 @@ struct PrimitiveDesc {
     kind: String,
     config: ron::Value,
     material: MaterialDesc,
+    transform: Transform,
+    position: Option<Position>,
 }
 
 #[derive(Deserialize)]
@@ -48,13 +53,17 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut loader = PluginLoader::new();
     let mut scene = Scene::new(parsed.camera);
 
-    for desc in &parsed.primitives {
+    for mut desc in parsed.primitives {
         let primitive = loader.load_primitive(&desc.kind, &desc.config)?;
         let material = loader.load_material(&desc.material.kind, &desc.material.config)?;
-        scene.add_object(primitive, material);
+        let position = desc.position.unwrap_or(Position::ZERO);
+        desc.transform.translation += position;
+        scene.add_object(primitive, material, desc.transform);
     }
 
-    scene.render_to_file("image.ppm");
+    let mut renderer = Renderer::from_scene(scene);
+
+    renderer.render_to_file("image.ppm");
 
     Ok(())
 }

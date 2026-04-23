@@ -2,15 +2,19 @@ SceneDesc(
     camera: (
         position: (0, 0, 0),
         rotation: (0, 0, 0),
-        resolution: (1920, 1080),
+        resolution: (4096, 4096),
         fov: 1
     ),
     primitives: [
         (
             kind: "sphere",
             config: (
-                position: (0, 0, -3),
                 radius: 1.0,
+            ),
+            transform: (
+                translation: (2, 0, -3),
+                rotation: (0, 0, 0),
+                scale: (0, 0, 0)
             ),
             material: (
                 kind: "flat_color",
@@ -24,6 +28,31 @@ SceneDesc(
             config: (
                 position: (1, 0.8, 1),
                 normal: (0.0, 1.0, 0.0),
+            kind: "sphere",
+            config: (
+                radius: 0.5,
+            ),
+            transform: (
+                translation: (-1, 0, -3),
+                rotation: (0, 0, 0),
+                scale: (0, 0, 0)
+            ),
+            material: (
+                kind: "flat_color",
+                config: (
+                    color: (0, 128, 0),
+                ),
+            ),
+        ),
+        (
+            kind: "sphere",
+            config: (
+                radius: 1.0,
+            ),
+            transform: (
+                translation: (-4, 0, -3),
+                rotation: (0, 0, 0),
+                scale: (0, 0, 0)
             ),
             material: (
                 kind: "flat_color",
@@ -32,6 +61,27 @@ SceneDesc(
                 ),
             ),
         ),
+                    color: (0, 128, 0),
+                ),
+            ),
+        ),
+        (
+            kind: "obj",
+            config: (
+                path: "./assets/rect.obj"
+            ),
+            transform: (
+                translation: (0, 0, -3),
+                rotation: (0, 0, 0),
+                scale: (0, 0, 0)
+            ),
+            material: (
+                kind: "flat_color",
+                config: (
+                    color: (255, 0, 0)
+                )
+            )
+        )
     ],
     lights: [],
 )
