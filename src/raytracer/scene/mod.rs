@@ -5,10 +5,11 @@ use crate::materials::Material;
 use crate::primitives::Primitive;
 use crate::rendering::color::Color;
 use crate::rendering::ray::Ray;
+use crate::rendering::transform::Transform;
 
 #[derive(Default)]
 pub struct Scene {
-    objects: Vec<(Primitive, Material)>,
+    objects: Vec<(Primitive, Material, Transform)>,
     camera: Camera,
 }
 
@@ -47,11 +48,8 @@ impl Scene {
                 );
 
                 let mut closest = None;
-                for (primitive, material) in &self.objects {
-                    // TODO: actually need to check what object is the most closest
-                    // (en fr excuse pavel) il faudrait qu'on sorte les objet du plus proche aux plus loin de la camera
-                    // comme ca on pourrait sarreter aux premier hit pour chaque pixel
-                    if let Some(hit) = ray.hit(primitive.as_ref()) {
+                for (primitive, material, transform) in &self.objects {
+                    if let Some(hit) = ray.hit(primitive.as_ref(), transform) {
                         let is_closer = closest
                             .as_ref()
                             .is_none_or(|(prev_t, _, _)| hit.t < *prev_t);
@@ -100,7 +98,7 @@ impl Scene {
         }
     }
 
-    pub fn add_object(&mut self, primitive: Primitive, material: Material) {
-        self.objects.push((primitive, material));
+    pub fn add_object(&mut self, primitive: Primitive, material: Material, transform: Transform) {
+        self.objects.push((primitive, material, transform));
     }
 }

@@ -1,9 +1,15 @@
 use std::{fs, str::FromStr};
 
 use raytracer::{
-    maths::vec3::{Position, Vec3, cross, dot},
+    maths::{
+        rotation::{rotate, rotate_inverse},
+        vec3::{Vec3, cross, dot},
+    },
     primitives::Primitive,
-    rendering::ray::{CanHit, HitRecord, Ray},
+    rendering::{
+        ray::{CanHit, HitRecord, Ray},
+        transform::Transform,
+    },
 };
 use serde::Deserialize;
 
@@ -16,17 +22,24 @@ struct Tri(Vec3, Vec3, Vec3, Vec3);
 pub struct Object(Vec<Tri>);
 
 impl CanHit for Object {
-    fn hit(&self, ray: &Ray) -> Option<HitRecord> {
-        let (mut best, mut t_max) = (None, f32::MAX);
+    fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
+        let local_pos = rotate_inverse(ray.position - transform.translation, transform.rotation);
+        let local_dir = rotate_inverse(ray.direction, transform.rotation);
+        let local_ray = Ray::new(local_pos, local_dir);
 
+        let (mut best, mut t_max) = (None, f32::MAX);
         for tri in &self.0 {
-            if let Some(hit) = hit_tri(ray, tri, t_max) {
+            if let Some(hit) = hit_tri(&local_ray, tri, t_max) {
                 t_max = hit.t;
                 best = Some(hit);
             }
         }
 
-        best
+        best.map(|hit| HitRecord {
+            t: hit.t,
+            point: rotate(hit.point, transform.rotation) + transform.translation,
+            normal: rotate(hit.normal, transform.rotation),
+        })
     }
 }
 
@@ -59,18 +72,14 @@ fn hit_tri(ray: &Ray, Tri(v0, e1, e2, n): &Tri, t_max: f32) -> Option<HitRecord>
 }
 
 impl Object {
-    pub fn new(position: Position, path: &str) -> Self {
+    pub fn new(path: &str) -> Self {
         let ObjModel {
-            mut vertices,
+            vertices,
             triangles,
         } = fs::read_to_string(path)
             .expect("unable to read .obj")
             .parse::<ObjModel>()
             .expect("invalid obj file");
-
-        for v in &mut vertices {
-            *v += position;
-        }
 
         Self(
             triangles
@@ -88,7 +97,6 @@ impl Object {
 
 #[derive(Deserialize)]
 struct ObjectConfig {
-    position: Position,
     path: String,
 }
 
@@ -150,5 +158,5 @@ pub fn create(cfg: &ron::Value) -> Primitive {
         .into_rust()
         .expect("object configuration invalid");
 
-    Box::new(Object::new(config.position, &config.path))
+    Box::new(Object::new(&config.path))
 }

@@ -7,9 +7,9 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone, Copy)]
 pub struct Vec3 {
-    x: f32,
-    y: f32,
-    z: f32,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
 impl Display for Vec3 {
@@ -18,28 +18,31 @@ impl Display for Vec3 {
     }
 }
 
-// -Vec3
 impl Neg for Vec3 {
     type Output = Vec3;
 
+    #[inline]
     fn neg(self) -> Vec3 {
         Vec3::from_xyz(-self.x, -self.y, -self.z)
     }
 }
 
 impl AddAssign for Vec3 {
+    #[inline]
     fn add_assign(&mut self, v: Vec3) {
         *self = *self + v;
     }
 }
 
 impl MulAssign<f32> for Vec3 {
+    #[inline]
     fn mul_assign(&mut self, t: f32) {
         *self = *self * t;
     }
 }
 
 impl DivAssign<f32> for Vec3 {
+    #[inline]
     fn div_assign(&mut self, t: f32) {
         *self = *self / t;
     }
@@ -53,46 +56,46 @@ impl Add for Vec3 {
     }
 }
 
-// Vec3 - Vec3
 impl Sub for Vec3 {
     type Output = Vec3;
 
+    #[inline]
     fn sub(self, v: Vec3) -> Vec3 {
         Vec3::from_xyz(self.x - v.x, self.y - v.y, self.z - v.z)
     }
 }
 
-// Vec3 * Vec3
 impl Mul for Vec3 {
     type Output = Vec3;
 
+    #[inline]
     fn mul(self, v: Vec3) -> Vec3 {
         Vec3::from_xyz(self.x * v.x, self.y * v.y, self.z * v.z)
     }
 }
 
-// f32 * Vec3
 impl Mul<Vec3> for f32 {
     type Output = Vec3;
 
+    #[inline]
     fn mul(self, v: Vec3) -> Vec3 {
         Vec3::from_xyz(self * v.x, self * v.y, self * v.z)
     }
 }
 
-// Vec3 * f32
 impl Mul<f32> for Vec3 {
     type Output = Vec3;
 
+    #[inline]
     fn mul(self, t: f32) -> Vec3 {
         Vec3::from_xyz(self.x * t, self.y * t, self.z * t)
     }
 }
 
-// Vec3 / f32
 impl Div<f32> for Vec3 {
     type Output = Vec3;
 
+    #[inline]
     fn div(self, t: f32) -> Vec3 {
         Vec3::from_xyz(self.x / t, self.y / t, self.z / t)
     }
@@ -111,25 +114,39 @@ pub fn cross(u: Vec3, v: Vec3) -> Vec3 {
 }
 
 impl Vec3 {
-    pub const ZERO: Vec3 = Vec3::from_xyz(0., 0., 0.);
+    pub const ZERO: Vec3 = Vec3::splat(0.);
 
+    #[inline]
+    pub const fn splat(value: f32) -> Vec3 {
+        Vec3 {
+            x: value,
+            y: value,
+            z: value,
+        }
+    }
+
+    #[inline]
     pub const fn from_xyz(x: f32, y: f32, z: f32) -> Vec3 {
         Vec3 { x, y, z }
     }
 
+    #[inline]
     pub fn length(&self) -> f32 {
         f32::sqrt(self.length_squared())
     }
 
+    #[inline]
     pub fn length_squared(&self) -> f32 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
+    #[inline]
     pub fn normalize(&self) -> Vec3 {
         let len = self.length();
         Vec3::from_xyz(self.x / len, self.y / len, self.z / len)
     }
 
+    #[inline]
     pub fn distance(&self, other: &Vec3) -> f32 {
         ((self.x - other.x) * (self.x - other.x)
             + (self.y - other.y) * (self.y - other.y)
@@ -137,23 +154,14 @@ impl Vec3 {
             .sqrt()
     }
 
+    #[inline]
     pub fn project(&self, value: f32) -> Vec3 {
         Vec3::from_xyz(self.x * value, self.y * value, self.z * value)
     }
-
-    pub fn x(&self) -> f32 {
-        self.x
-    }
-
-    pub fn y(&self) -> f32 {
-        self.y
-    }
-
-    pub fn z(&self) -> f32 {
-        self.z
-    }
 }
 
+pub type Translation = Vec3;
 pub type Position = Vec3;
 pub type Direction = Vec3;
 pub type Rotation = Vec3;
+pub type Scale = Vec3;
