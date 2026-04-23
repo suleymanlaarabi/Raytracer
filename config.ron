@@ -14,7 +14,7 @@ SceneDesc(
             transform: (
                 translation: (2, 0, -3),
                 rotation: (0, 0, 0),
-                scale: (0, 0, 0)
+                scale: (1, 1, 1)
             ),
             material: (
                 kind: "flat_color",
@@ -22,12 +22,26 @@ SceneDesc(
                     color: (0, 128, 0),
                 ),
             ),
-        ),
+        ),        
         (
             kind: "plane",
             config: (
-                position: (1, 0.8, 1),
+                position: (0.0, -1.5, 0.0), 
                 normal: (0.0, 1.0, 0.0),
+            ),
+            transform: (
+                translation: (0, 0, 0),
+                rotation: (0, 0, 0),
+                scale: (1, 1, 1)
+            ),
+            material: (
+                kind: "flat_color",
+                config: (
+                    color: (128, 0, 0),
+                ),
+            ),
+        ),
+        (
             kind: "sphere",
             config: (
                 radius: 0.5,
@@ -35,7 +49,7 @@ SceneDesc(
             transform: (
                 translation: (-1, 0, -3),
                 rotation: (0, 0, 0),
-                scale: (0, 0, 0)
+                scale: (1, 1, 1)
             ),
             material: (
                 kind: "flat_color",
@@ -52,16 +66,12 @@ SceneDesc(
             transform: (
                 translation: (-4, 0, -3),
                 rotation: (0, 0, 0),
-                scale: (0, 0, 0)
+                scale: (1, 1, 1)
             ),
             material: (
                 kind: "flat_color",
                 config: (
                     color: (128, 0, 0),
-                ),
-            ),
-        ),
-                    color: (0, 128, 0),
                 ),
             ),
         ),
@@ -73,7 +83,7 @@ SceneDesc(
             transform: (
                 translation: (0, 0, -3),
                 rotation: (0, 0, 0),
-                scale: (0, 0, 0)
+                scale: (1, 1, 1)
             ),
             material: (
                 kind: "flat_color",
