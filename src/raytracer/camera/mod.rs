@@ -23,8 +23,8 @@ pub struct CameraBasis {
 
 impl Camera {
     pub fn basis(&self) -> CameraBasis {
-        let pitch = self.rotation.x();
-        let yaw = self.rotation.y();
+        let pitch = self.rotation.x;
+        let yaw = self.rotation.y;
         let forward = Vec3::from_xyz(
             pitch.cos() * yaw.sin(),
             -pitch.sin(),

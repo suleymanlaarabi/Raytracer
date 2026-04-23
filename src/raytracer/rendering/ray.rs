@@ -1,4 +1,7 @@
-use crate::maths::vec3::{Direction, Position};
+use crate::{
+    maths::vec3::{Direction, Position},
+    rendering::transform::Transform,
+};
 
 pub struct HitRecord {
     pub t: f32,
@@ -19,11 +22,11 @@ impl Ray {
         }
     }
 
-    pub fn hit(&self, hittable: &dyn CanHit) -> Option<HitRecord> {
-        hittable.hit(self)
+    pub fn hit(&self, hittable: &dyn CanHit, transform: &Transform) -> Option<HitRecord> {
+        hittable.hit(self, transform)
     }
 }
 
 pub trait CanHit {
-    fn hit(&self, ray: &Ray) -> Option<HitRecord>;
+    fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord>;
 }
