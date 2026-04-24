@@ -1,8 +1,9 @@
 use std::{
     fmt::{Display, Formatter},
-    ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub},
+    ops::*,
 };
 
+use ron::{Number, Value};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone, Copy)]
@@ -126,6 +127,40 @@ impl Vec3 {
     }
 
     #[inline]
+    pub fn from_ron_value(v: &Value) -> Option<Vec3> {
+        let Value::Seq(s) = v else { return None };
+        if s.len() != 3 {
+            return None;
+        }
+        let f = |x: &Value| {
+            if let Value::Number(n) = x {
+                Some(n.into_f64() as f32)
+            } else {
+                None
+            }
+        };
+        Some(Vec3::from_xyz(f(&s[0])?, f(&s[1])?, f(&s[2])?))
+    }
+
+    #[inline]
+    pub fn to_value(&self) -> Value {
+        let mut m = ron::Map::new();
+        m.insert(
+            Value::String("x".into()),
+            Value::Number(Number::new(self.x)),
+        );
+        m.insert(
+            Value::String("y".into()),
+            Value::Number(Number::new(self.y)),
+        );
+        m.insert(
+            Value::String("z".into()),
+            Value::Number(Number::new(self.z)),
+        );
+        Value::Map(m)
+    }
+
+    #[inline]
     pub const fn from_xyz(x: f32, y: f32, z: f32) -> Vec3 {
         Vec3 { x, y, z }
     }
@@ -184,6 +219,9 @@ impl Vec3 {
         let z3 = z2;
 
         Vec3::from_xyz(x3, y3, z3)
+    }
+    pub fn is_zero(&self) -> bool {
+        self.x == 0.0 && self.y == 0.0 && self.z == 0.0
     }
 }
 
