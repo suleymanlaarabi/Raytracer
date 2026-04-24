@@ -19,18 +19,23 @@ impl CanHit for Plane {
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
         let current_normal = self.normal.rotate(transform.rotation);
         let denominator = dot(current_normal, ray.direction);
-        if denominator.abs() < 1e-6 { // if denominator equals 0, the ray is perpendicular to the normal
-            return None;              // (therefore parallel to the plane), it does not touch it.
-        }        
+        if denominator.abs() < 1e-6 {
+            // if denominator equals 0, the ray is perpendicular to the normal
+            return None; // (therefore parallel to the plane), it does not touch it.
+        }
         let difference = transform.translation - ray.position;
         let t = dot(difference, current_normal) / denominator; // determine the distance to the plane
         if t < 0.001 {
             return None;
         }
-        
+
         let point = ray.position + t * ray.direction; // find where the impact lies 
-        
-        Some(HitRecord { t, point, normal: current_normal })
+
+        Some(HitRecord {
+            t,
+            point,
+            normal: current_normal,
+        })
     }
 }
 
