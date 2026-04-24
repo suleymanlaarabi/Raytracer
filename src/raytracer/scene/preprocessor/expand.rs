@@ -57,34 +57,34 @@ pub fn expand(
 
         let composed = compose(outer_t, inner_t);
 
-        if let Some(Value::Map(def)) = defs.get(&kind) {
-            if let Some(Value::Seq(inner)) = get(def, "primitives") {
-                if stack.contains(&kind) {
-                    return Err(Error::CyclicDependency({
-                        let mut c = stack.clone();
-                        c.push(kind);
-                        c
-                    }));
-                }
-                let decl = get(def, "props").map(seq_strings).unwrap_or_default();
-                let callsite = get(map, "props")
-                    .and_then(|v| if let Value::Map(m) = v { Some(m) } else { None });
-                let resolved_props: Defs = decl
-                    .iter()
-                    .map(|p| -> Result<_, Error> {
-                        let raw = callsite
-                            .and_then(|m| get(m, p).cloned())
-                            .ok_or_else(|| Error::MissingProp(kind.clone(), p.clone()))?;
-                        Ok((p.clone(), resolve(raw, props, defs)?))
-                    })
-                    .collect::<Result<_, _>>()?;
-
-                stack.push(kind);
-                let inner = inner.clone();
-                out.extend(expand(&inner, composed, &resolved_props, defs, stack)?);
-                stack.pop();
-                continue;
+        if let Some(Value::Map(def)) = defs.get(&kind)
+            && let Some(Value::Seq(inner)) = get(def, "primitives")
+        {
+            if stack.contains(&kind) {
+                return Err(Error::CyclicDependency({
+                    let mut c = stack.clone();
+                    c.push(kind);
+                    c
+                }));
             }
+            let decl = get(def, "props").map(seq_strings).unwrap_or_default();
+            let callsite =
+                get(map, "props").and_then(|v| if let Value::Map(m) = v { Some(m) } else { None });
+            let resolved_props: Defs = decl
+                .iter()
+                .map(|p| -> Result<_, Error> {
+                    let raw = callsite
+                        .and_then(|m| get(m, p).cloned())
+                        .ok_or_else(|| Error::MissingProp(kind.clone(), p.clone()))?;
+                    Ok((p.clone(), resolve(raw, props, defs)?))
+                })
+                .collect::<Result<_, _>>()?;
+
+            stack.push(kind);
+            let inner = inner.clone();
+            out.extend(expand(&inner, composed, &resolved_props, defs, stack)?);
+            stack.pop();
+            continue;
         }
 
         let composed_val = Value::Map(composed.to_map());

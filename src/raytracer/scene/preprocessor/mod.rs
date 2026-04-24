@@ -63,10 +63,10 @@ fn load_imports(root: &Map, base_dir: &Path) -> Result<Defs, Error> {
     let mut defs = HashMap::new();
     for path in seq_strings(&Value::Seq(imports.clone())) {
         let content = std::fs::read_to_string(base_dir.join(&path))?;
-        if let Value::Map(m) = ron::from_str::<Value>(&content)? {
-            if let Some(Value::Map(d)) = get(&m, "components") {
-                defs.extend(collect_defs(d));
-            }
+        if let Value::Map(m) = ron::from_str::<Value>(&content)?
+            && let Some(Value::Map(d)) = get(&m, "components")
+        {
+            defs.extend(collect_defs(d));
         }
     }
     Ok(defs)
