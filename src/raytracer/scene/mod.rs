@@ -1,3 +1,5 @@
+pub mod preprocessor;
+
 use crate::camera::Camera;
 use crate::materials::Material;
 use crate::primitives::Primitive;

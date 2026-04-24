@@ -1,0 +1,14 @@
+(
+    imports: ["./assets/car.ron", "./assets/color.ron"],
+    camera: (
+        position: (0, 2, -10),
+        rotation: (0, 0, 0),
+        resolution: (width: 1920, height: 1080),
+        fov: 1.0,
+    ),
+    primitives: [
+        (kind: "Car", props: (color: "@RED"), transform: (translation: (5, 0, 0))),
+        (kind: "Car", props: (color: "@RED"), transform: (translation: (0, 0, 5))),
+    ],
+    lights: [],
+)

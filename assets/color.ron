@@ -1,0 +1,7 @@
+(
+    components: {
+        "BLACK": (kind: "flat_color", config: (color: (0, 0, 0))),
+        "WHITE": (kind: "flat_color", config: (color: (255, 255, 255))),
+        "RED":   (kind: "flat_color", config: (color: (255, 0, 0))),
+    }
+)
