@@ -1,10 +1,10 @@
 [package]
-name = "raytracer_light_point_light"
+name = "raytracer_light_directional_light"
 version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "raytracer_light_point_light"
+name = "raytracer_light_directional_light"
 crate-type = ["cdylib"]
 
 [dependencies]
