@@ -1,14 +1,10 @@
-SceneDesc(
+(
+    imports: ["./assets/color.ron"],
     camera: (
         position: (0, 0, 0),
         rotation: (0, 0, 0),
-<<<<<<< HEAD
         resolution: (1920, 1080),
-        fov: 100
-=======
-        resolution: (4096, 4096),
         fov: 1
->>>>>>> 900b7559d4a4a8b6e306df5d4540f9c614183d45
     ),
     primitives: [
         (
