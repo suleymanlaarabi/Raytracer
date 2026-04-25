@@ -10,6 +10,7 @@ type CreatePrimitiveFn = fn(&ron::Value) -> Primitive;
 type CreateMaterialFn = fn(&ron::Value) -> Material;
 type CreateLightFn = fn(&ron::Value) -> Light;
 
+#[derive(Default)]
 pub struct PluginLoader {
     primitive_libs: HashMap<String, Library>,
     material_libs: HashMap<String, Library>,
@@ -65,11 +66,7 @@ impl PluginLoader {
         Ok(create(config))
     }
 
-    pub fn load_light(
-        &mut self,
-        kind: &str,
-        config: &ron::Value,
-    ) -> Result<Light, Box<dyn Error>> {
+    pub fn load_light(&mut self, kind: &str, config: &ron::Value) -> Result<Light, Box<dyn Error>> {
         if !self.light_libs.contains_key(kind) {
             let lib = unsafe { Library::new(Self::light_path(kind))? };
             self.light_libs.insert(kind.to_string(), lib);

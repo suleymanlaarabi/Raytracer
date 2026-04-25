@@ -27,10 +27,10 @@ fn is_shadowed(
     let origin = *hit_point + sample.direction * 1e-4;
     let shadow_ray = Ray::new(origin, sample.direction);
     for (primitive, _, transform) in objects {
-        if let Some(occluder) = shadow_ray.hit(primitive.as_ref(), transform) {
-            if occluder.t < sample.distance {
-                return true;
-            }
+        if let Some(occluder) = shadow_ray.hit(primitive.as_ref(), transform)
+            && occluder.t < sample.distance
+        {
+            return true;
         }
     }
     false
