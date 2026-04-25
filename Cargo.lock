@@ -340,6 +340,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "raytracer_cylinder"
+version = "0.1.0"
+dependencies = [
+ "raytracer",
+ "ron",
+ "serde",
+]
+
+[[package]]
 name = "raytracer_light_directional_light"
 version = "0.1.0"
 dependencies = [

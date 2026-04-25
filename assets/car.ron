@@ -3,17 +3,49 @@
     components: {
         "Roue": (
             primitives: [
-                (kind: "sphere", transform: (scale: (2, 2, 2)), material: "@BLACK"),
-                (kind: "sphere", transform: (scale: (1, 1, 1)), material: "@WHITE"),
+                (kind: "cylinder", config: (radius: 0.4, height: 0.3), transform: (scale: (2, 2, 2)), material: "@WHITE"),
+                (kind: "cylinder", config: (radius: 0.2, height: 0.4), transform: (scale: (1, 1, 1)), material: "@BLACK"),
             ]
         ),
         "Car": (
             props: ["color"],
             primitives: [
-                (kind: "Roue", transform: (translation: (1,  0,  1))),
-                (kind: "Roue", transform: (translation: (1,  0, -1))),
-                (kind: "Roue", transform: (translation: (-1, 0,  1))),
-                (kind: "Roue", transform: (translation: (-1, 0, -1))),
+                (
+                    kind: "Roue",
+                    transform: (
+                        translation: (-2,  0,  0),
+                        rotation: (90, 0, 0)
+                    )
+                ),
+                (
+                    kind: "Roue",
+                    transform: (
+                        translation: (2,  0,  0),
+                        rotation: (90, 0, 0)
+                    )
+                ),
+                (
+                    kind: "Roue",
+                    transform: (
+                        translation: (-2,  0,  2),
+                        rotation: (90, 0, 0)
+                    )
+                ),
+                (
+                    kind: "Roue",
+                    transform: (
+                        translation: (2,  0,  2),
+                        rotation: (90, 0, 0)
+                    )
+                ),
+                (
+                    kind: "sphere",
+                    config: (
+                        radius: 1.5
+                    ),
+                    transform: (),
+                    material: "@color"
+                )
             ]
         ),
     },
