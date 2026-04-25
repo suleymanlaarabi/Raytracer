@@ -5,5 +5,7 @@ members = [
     "src/primitives/plane",
     "src/primitives/obj",
     "src/materials/flat_color",
+    "src/lights/point_light",
+    "src/lights/directional_light"
 ]
 resolver = "2"

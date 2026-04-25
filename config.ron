@@ -3,7 +3,7 @@
     camera: (
         position: (0, 0, 0),
         rotation: (0, 0, 0),
-        resolution: (4096, 4096),
+        resolution: (width: 7680, height: 4320),
         fov: 1
     ),
     primitives: [
@@ -20,17 +20,37 @@
             material: "@CYAN",
         ),
         (
+            kind: "sphere",
+            config: (
+                radius: 1.0,
+            ),
+            transform: (
+                translation: (-2, 0, -3),
+                rotation: (0, 0, 0),
+                scale: (1, 1, 1)
+            ),
+            material: "@CYAN",
+        ),
+        (
             kind: "plane",
             config: (
                 normal: (0.0, 1.0, 0.0),
             ),
             transform: (
-                translation: (0.0, 0.8, 0.0),
+                translation: (0.0, -1.0, 0.0),
                 rotation: (0, 0, 0),
                 scale: (1, 1, 1)
             ),
-            material: "@BLUE",
+            material: (kind: "flat_color", config: (color: (50, 50, 255))),
         ),
     ],
-    lights: [],
+    lights: [
+        (
+            kind: "directional_light",
+            config: (
+                direction: (x: 0.0, y: 1.0, z: 1.0),
+                intensity: (0.5, 0.5, 0.5),
+            ),
+        ),
+    ],
 )

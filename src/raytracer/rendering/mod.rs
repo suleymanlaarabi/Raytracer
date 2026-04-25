@@ -4,6 +4,7 @@ use std::{
 };
 
 use crate::{
+    lights::{Light, LightSample},
     maths::vec3::Vec3,
     rendering::{color::Color, ray::Ray},
     scene::{Object, Scene},
@@ -18,8 +19,25 @@ pub struct Renderer {
     buffer: Vec<Color>,
 }
 
+fn is_shadowed(
+    hit_point: &crate::maths::vec3::Position,
+    sample: &LightSample,
+    objects: &[Object],
+) -> bool {
+    let origin = *hit_point + sample.direction * 1e-4;
+    let shadow_ray = Ray::new(origin, sample.direction);
+    for (primitive, _, transform) in objects {
+        if let Some(occluder) = shadow_ray.hit(primitive.as_ref(), transform)
+            && occluder.t < sample.distance
+        {
+            return true;
+        }
+    }
+    false
+}
+
 #[inline]
-fn render_x(ray: &mut Ray, objects: &[Object], row: &mut [Color], x: usize) {
+fn render_x(ray: &mut Ray, objects: &[Object], lights: &[Light], row: &mut [Color], x: usize) {
     let mut closest = None;
     for (primitive, material, transform) in objects {
         if let Some(hit) = ray.hit(primitive.as_ref(), transform) {
@@ -33,7 +51,14 @@ fn render_x(ray: &mut Ray, objects: &[Object], row: &mut [Color], x: usize) {
     }
 
     row[x] = match closest {
-        Some((_, hit, mat)) => mat.shade(&hit),
+        Some((_, hit, mat)) => {
+            let visible: Vec<LightSample> = lights
+                .iter()
+                .map(|l| l.sample(hit.point))
+                .filter(|s| !is_shadowed(&hit.point, s, objects))
+                .collect();
+            mat.shade(&hit, &visible)
+        }
         None => Color::BLACK,
     };
 }
@@ -77,6 +102,7 @@ impl Renderer {
             origin - horizontal / 2.0 - vertical / 2.0 + basis.forward * focal_length;
 
         let objects: &[Object] = &self.scene.objects;
+        let lights: &[Light] = &self.scene.lights;
 
         let threads = thread::available_parallelism()
             .map(|n| n.get())
@@ -96,7 +122,7 @@ impl Renderer {
                     for (local_y, row) in rows.chunks_mut(screen_width).enumerate() {
                         let y = start_y + local_y;
 
-                        let v = y as f32 / (screen_height - 1) as f32;
+                        let v = 1.0 - y as f32 / (screen_height - 1) as f32;
                         let mut ray = Ray::new(origin, Vec3::ZERO);
 
                         for x in 0..screen_width {
@@ -106,7 +132,7 @@ impl Renderer {
                                 - origin)
                                 .normalize();
 
-                            render_x(&mut ray, objects, row, x);
+                            render_x(&mut ray, objects, lights, row, x);
                         }
                     }
                 });
