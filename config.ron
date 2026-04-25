@@ -1,9 +1,9 @@
 (
     imports: ["./assets/color.ron"],
     camera: (
-        position: (0, 0, 0),
+        position: (0, 0, 2),
         rotation: (0, 0, 0),
-        resolution: (4096, 4096),
+        resolution: (width: 1920, height: 1080),
         fov: 1
     ),
     primitives: [
@@ -14,8 +14,16 @@
             ),
             transform: (
                 translation: (2, 0, -3),
-                rotation: (0, 0, 0),
-                scale: (1, 1, 1)
+            ),
+            material: "@CYAN",
+        ),
+        (
+            kind: "sphere",
+            config: (
+                radius: 1.0,
+            ),
+            transform: (
+                translation: (-2, 0, -3),
             ),
             material: "@CYAN",
         ),
@@ -25,12 +33,18 @@
                 normal: (0.0, 1.0, 0.0),
             ),
             transform: (
-                translation: (0.0, 0.8, 0.0),
-                rotation: (0, 0, 0),
-                scale: (1, 1, 1)
+                translation: (0.0, -1.0, 0.0),
             ),
             material: "@BLUE",
         ),
     ],
-    lights: [],
+    lights: [
+        (
+            kind: "point_light",
+            config: (
+                position: (x: 0, y: 5, z: 0),
+                intensity: (0.5, 0.5, 0.5),
+            ),
+        ),
+    ],
 )
