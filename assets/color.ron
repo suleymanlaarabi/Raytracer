@@ -2,6 +2,11 @@
     components: {
         "BLACK": (kind: "flat_color", config: (color: (0, 0, 0))),
         "WHITE": (kind: "flat_color", config: (color: (255, 255, 255))),
-        "RED":   (kind: "flat_color", config: (color: (255, 0, 0))),
+        "RED": (kind: "flat_color", config: (color: (255, 0, 0))),
+        "BLUE": (kind: "flat_color", config: (color: (0, 0, 255))),
+        "GREEN": (kind: "flat_color", config: (color: (0, 255, 0))),
+        "YELLOW": (kind: "flat_color", config: (color: (255, 255, 0))),
+        "CYAN": (kind: "flat_color", config: (color: (0, 255, 255))),
+        "MAGENTA": (kind: "flat_color", config: (color: (255, 0, 255))),
     }
 )

@@ -77,7 +77,9 @@ pub fn preprocess(source: &str, base_dir: &Path) -> Result<String, Error> {
         return Ok(source.to_string());
     };
 
-    if get(&root, "components").is_none() {
+    let has_components = get(&root, "components").is_some();
+    let has_imports = get(&root, "imports").is_some();
+    if !has_components && !has_imports {
         return Ok(source.to_string());
     }
 

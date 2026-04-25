@@ -1,4 +1,5 @@
-SceneDesc(
+(
+    imports: ["./assets/color.ron"],
     camera: (
         position: (0, 0, 0),
         rotation: (0, 0, 0),
@@ -16,13 +17,8 @@ SceneDesc(
                 rotation: (0, 0, 0),
                 scale: (1, 1, 1)
             ),
-            material: (
-                kind: "flat_color",
-                config: (
-                    color: (0, 128, 0),
-                ),
-            ),
-        ),        
+            material: "@CYAN",
+        ),
         (
             kind: "plane",
             config: (
@@ -33,64 +29,8 @@ SceneDesc(
                 rotation: (0, 0, 0),
                 scale: (1, 1, 1)
             ),
-            material: (
-                kind: "flat_color",
-                config: (
-                    color: (0, 0, 128),
-                ),
-            ),
+            material: "@BLUE",
         ),
-        (
-            kind: "sphere",
-            config: (
-                radius: 0.5,
-            ),
-            transform: (
-                translation: (-1, 0, -3),
-                rotation: (0, 0, 0),
-                scale: (1, 1, 1)
-            ),
-            material: (
-                kind: "flat_color",
-                config: (
-                    color: (0, 128, 0),
-                ),
-            ),
-        ),
-        (
-            kind: "sphere",
-            config: (
-                radius: 1.0,
-            ),
-            transform: (
-                translation: (-4, 0, -3),
-                rotation: (0, 0, 0),
-                scale: (1, 1, 1)
-            ),
-            material: (
-                kind: "flat_color",
-                config: (
-                    color: (128, 0, 0),
-                ),
-            ),
-        ),
-        (
-            kind: "obj",
-            config: (
-                path: "./assets/rect.obj"
-            ),
-            transform: (
-                translation: (0, 0, -3),
-                rotation: (0, 0, 0),
-                scale: (1, 1, 1)
-            ),
-            material: (
-                kind: "flat_color",
-                config: (
-                    color: (255, 0, 0)
-                )
-            )
-        )
     ],
     lights: [],
 )
