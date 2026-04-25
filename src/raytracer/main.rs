@@ -36,13 +36,16 @@ struct PrimitiveDesc {
 }
 
 #[derive(Deserialize)]
-#[allow(dead_code)]
+struct LightDesc {
+    kind: String,
+    config: Option<ron::Value>,
+}
+
+#[derive(Deserialize)]
 struct SceneDesc {
-    props: Option<ron::Value>,
     primitives: Vec<PrimitiveDesc>,
-    lights: Vec<ron::Value>,
+    lights: Vec<LightDesc>,
     camera: Camera,
-    imports: Option<Vec<String>>,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -71,6 +74,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         let position = desc.position.unwrap_or(Position::ZERO);
         desc.transform.translation += position;
         scene.add_object(primitive, material, desc.transform);
+    }
+
+    for desc in parsed.lights {
+        let light = loader.load_light(&desc.kind, &desc.config.unwrap_or(ron::Value::Unit))?;
+        scene.add_light(light);
     }
 
     let mut renderer = Renderer::from_scene(scene);
