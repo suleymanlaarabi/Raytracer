@@ -2,22 +2,38 @@ SceneDesc(
     camera: (
         position: (0, 0, 0),
         rotation: (0, 0, 0),
+<<<<<<< HEAD
         resolution: (1920, 1080),
         fov: 100
+=======
+        resolution: (4096, 4096),
+        fov: 1
+>>>>>>> 900b7559d4a4a8b6e306df5d4540f9c614183d45
     ),
     primitives: [
         (
             kind: "sphere",
             config: (
-                position: (0, 0, -3),
                 radius: 1.0,
             ),
-            material: (
-                kind: "flat_color",
-                config: (
-                    color: (0, 128, 0),
-                ),
+            transform: (
+                translation: (2, 0, -3),
+                rotation: (0, 0, 0),
+                scale: (1, 1, 1)
             ),
+            material: "@CYAN",
+        ),
+        (
+            kind: "plane",
+            config: (
+                normal: (0.0, 1.0, 0.0),
+            ),
+            transform: (
+                translation: (0.0, 0.8, 0.0),
+                rotation: (0, 0, 0),
+                scale: (1, 1, 1)
+            ),
+            material: "@BLUE",
         ),
     ],
     lights: [],

@@ -1,2 +1,2 @@
 use crate::rendering::ray::CanHit;
-pub type Primitive = Box<dyn CanHit>;
+pub type Primitive = Box<dyn CanHit + Send + Sync>;

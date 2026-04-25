@@ -1,0 +1,20 @@
+(
+    imports: ["./color.ron"],
+    components: {
+        "Roue": (
+            primitives: [
+                (kind: "sphere", transform: (scale: (2, 2, 2)), material: "@BLACK"),
+                (kind: "sphere", transform: (scale: (1, 1, 1)), material: "@WHITE"),
+            ]
+        ),
+        "Car": (
+            props: ["color"],
+            primitives: [
+                (kind: "Roue", transform: (translation: (1,  0,  1))),
+                (kind: "Roue", transform: (translation: (1,  0, -1))),
+                (kind: "Roue", transform: (translation: (-1, 0,  1))),
+                (kind: "Roue", transform: (translation: (-1, 0, -1))),
+            ]
+        ),
+    },
+)
