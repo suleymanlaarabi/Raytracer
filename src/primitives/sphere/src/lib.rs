@@ -7,37 +7,29 @@ use raytracer::rendering::ray::{CanHit, HitRecord, Ray};
 
 pub struct Sphere {
     pub radius: f32,
+    pub inv_radius: f32,
 }
 
 impl CanHit for Sphere {
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
         let oc = ray.position - transform.translation;
-        let a = dot(ray.direction, ray.direction);
         let half_b = dot(oc, ray.direction);
-        let c = dot(oc, oc) - self.radius * self.radius;
-        let discriminant = half_b * half_b - a * c;
-        if discriminant < 0.0 {
+        let disc = half_b * half_b - (dot(oc, oc) - self.radius * self.radius);
+        if disc < 0.0 {
             return None;
         }
-        let sqrt_d = discriminant.sqrt();
-        let t1 = (-half_b - sqrt_d) / a;
-        let t2 = (-half_b + sqrt_d) / a;
-        let t = if t1 > 0.0 {
-            t1
-        } else if t2 > 0.0 {
-            t2
-        } else {
-            return None;
-        };
+        let sqrt_d = disc.sqrt();
+        let t1 = -half_b - sqrt_d;
+        let t2 = -half_b + sqrt_d;
+        let t = if t1 > 0.001 { t1 } else if t2 > 0.001 { t2 } else { return None };
         let point = ray.position + t * ray.direction;
-        let normal = (point - transform.translation) / self.radius;
-        Some(HitRecord { t, point, normal })
+        Some(HitRecord { t, point, normal: (point - transform.translation) * self.inv_radius })
     }
 }
 
 impl Sphere {
     pub fn new(radius: f32) -> Self {
-        Sphere { radius }
+        Sphere { radius, inv_radius: 1.0 / radius }
     }
 }
 

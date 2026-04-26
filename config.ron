@@ -1,9 +1,9 @@
 (
     imports: ["./assets/color.ron", "./assets/car.ron"],
     camera: (
-        position: (0, 2, 5),
-        rotation: (0.5, 0, 0),
-        resolution: (width: 2880, height: 1690),
+        position: (5., 2, 5),
+        rotation: (0.5, -0.4, 0),
+        resolution: (width: 1920, height: 1080),
         fov: 1
     ),
     primitives: [
@@ -21,6 +21,9 @@
             kind: "Car",
             props: (
                 color: "@YELLOW"
+            ),
+            transform: (
+                translation: (2.5, 0, 0)
             )
         ),
         (
@@ -29,7 +32,7 @@
                 color: "@RED"
             ),
             transform: (
-                translation: (0, 0, -4)
+                translation: (-2.5, 0, 0)
             )
         )
     ],
@@ -37,9 +40,9 @@
         (
             kind: "point_light",
             config: (
-                position: (x: 0, y: 5, z: 0),
+                position: (x: 0, y: 5, z: 5),
                 intensity: (0.8, 0.8, 0.8),
             ),
-        ),
+        )
     ],
 )
