@@ -34,6 +34,15 @@
             transform: (
                 translation: (-2.5, 0, 0)
             )
+        ),
+        (
+            kind: "Car",
+            props: (
+                color: "@GREEN"
+            ),
+            transform: (
+                translation: (7.5, 0, 0)
+            )
         )
     ],
     lights: [

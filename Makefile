@@ -1,7 +1,7 @@
 
 
 all:
-	cargo build
+	cargo build --release
 	mkdir -p plugins
 	cp ./target/debug/*.so ./plugins
 
