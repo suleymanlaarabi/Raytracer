@@ -37,7 +37,14 @@ fn is_shadowed(
 }
 
 #[inline]
-fn render_x(ray: &mut Ray, objects: &[Object], lights: &[Light], row: &mut [Color], x: usize) {
+fn render_x(
+    ray: &mut Ray,
+    objects: &[Object],
+    lights: &[Light],
+    row: &mut [Color],
+    x: usize,
+    light_buf: &mut Vec<LightSample>,
+) {
     let mut closest = None;
     for (primitive, material, transform) in objects {
         if let Some(hit) = ray.hit(primitive.as_ref(), transform) {
@@ -52,12 +59,14 @@ fn render_x(ray: &mut Ray, objects: &[Object], lights: &[Light], row: &mut [Colo
 
     row[x] = match closest {
         Some((_, hit, mat)) => {
-            let visible: Vec<LightSample> = lights
-                .iter()
-                .map(|l| l.sample(hit.point))
-                .filter(|s| !is_shadowed(&hit.point, s, objects))
-                .collect();
-            mat.shade(&hit, &visible)
+            light_buf.clear();
+            light_buf.extend(
+                lights
+                    .iter()
+                    .map(|l| l.sample(hit.point))
+                    .filter(|s| !is_shadowed(&hit.point, s, objects)),
+            );
+            mat.shade(&hit, light_buf)
         }
         None => Color::BLACK,
     };
@@ -119,6 +128,7 @@ impl Renderer {
                 let start_y = chunk_idx * rows_per_chunk;
 
                 s.spawn(move || {
+                    let mut light_buf: Vec<LightSample> = Vec::with_capacity(lights.len());
                     for (local_y, row) in rows.chunks_mut(screen_width).enumerate() {
                         let y = start_y + local_y;
 
@@ -132,7 +142,7 @@ impl Renderer {
                                 - origin)
                                 .normalize();
 
-                            render_x(&mut ray, objects, lights, row, x);
+                            render_x(&mut ray, objects, lights, row, x, &mut light_buf);
                         }
                     }
                 });

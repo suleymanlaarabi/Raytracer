@@ -11,9 +11,7 @@ pub struct Cylinder {
 
 impl CanHit for Cylinder {
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
-        let axis = Vec3::from_xyz(0.0, 1.0, 0.0)
-            .rotate(transform.rotation)
-            .normalize();
+        let axis = transform.rotate_vec(Vec3::from_xyz(0.0, 1.0, 0.0));
         let half_h = self.height / 2.0;
         let oc = ray.position - transform.translation;
         let d_perp = ray.direction - dot(ray.direction, axis) * axis;
