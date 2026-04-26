@@ -17,7 +17,7 @@ impl Plane {
 
 impl CanHit for Plane {
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
-        let current_normal = self.normal.rotate(transform.rotation);
+        let current_normal = transform.rotate_vec(self.normal);
         let denominator = dot(current_normal, ray.direction);
         if denominator.abs() < 1e-6 {
             // if denominator equals 0, the ray is perpendicular to the normal

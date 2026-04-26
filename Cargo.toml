@@ -3,6 +3,7 @@ members = [
     "src/raytracer",
     "src/primitives/sphere",
     "src/primitives/plane",
+    "src/primitives/cylinder",
     "src/primitives/obj",
     "src/materials/flat_color",
     "src/lights/point_light",

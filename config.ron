@@ -1,32 +1,12 @@
 (
-    imports: ["./assets/color.ron"],
+    imports: ["./assets/color.ron", "./assets/car.ron"],
     camera: (
-        position: (0, 0, 2),
-        rotation: (0, 0, 0),
-        resolution: (width: 1920, height: 1080),
+        position: (0, 2, 5),
+        rotation: (0.5, 0, 0),
+        resolution: (width: 2880, height: 1690),
         fov: 1
     ),
     primitives: [
-        (
-            kind: "sphere",
-            config: (
-                radius: 1.0,
-            ),
-            transform: (
-                translation: (2, 0, -3),
-            ),
-            material: "@CYAN",
-        ),
-        (
-            kind: "sphere",
-            config: (
-                radius: 1.0,
-            ),
-            transform: (
-                translation: (-2, 0, -3),
-            ),
-            material: "@CYAN",
-        ),
         (
             kind: "plane",
             config: (
@@ -37,13 +17,28 @@
             ),
             material: "@BLUE",
         ),
+        (
+            kind: "Car",
+            props: (
+                color: "@YELLOW"
+            )
+        ),
+        (
+            kind: "Car",
+            props: (
+                color: "@RED"
+            ),
+            transform: (
+                translation: (0, 0, -4)
+            )
+        )
     ],
     lights: [
         (
             kind: "point_light",
             config: (
                 position: (x: 0, y: 5, z: 0),
-                intensity: (0.5, 0.5, 0.5),
+                intensity: (0.8, 0.8, 0.8),
             ),
         ),
     ],
