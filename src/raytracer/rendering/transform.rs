@@ -48,7 +48,12 @@ impl Transform {
     };
 
     pub fn new(translation: Translation, rotation: Rotation, scale: Scale) -> Self {
-        Transform { translation, rotation, scale, rot_mat: compute_rot_mat(rotation) }
+        Transform {
+            translation,
+            rotation,
+            scale,
+            rot_mat: compute_rot_mat(rotation),
+        }
     }
 
     #[inline]
