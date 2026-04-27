@@ -21,15 +21,28 @@ impl CanHit for Sphere {
         let sqrt_d = disc.sqrt();
         let t1 = -half_b - sqrt_d;
         let t2 = -half_b + sqrt_d;
-        let t = if t1 > 0.001 { t1 } else if t2 > 0.001 { t2 } else { return None };
+        let t = if t1 > 0.001 {
+            t1
+        } else if t2 > 0.001 {
+            t2
+        } else {
+            return None;
+        };
         let point = ray.position + t * ray.direction;
-        Some(HitRecord { t, point, normal: (point - transform.translation) * self.inv_radius })
+        Some(HitRecord {
+            t,
+            point,
+            normal: (point - transform.translation) * self.inv_radius,
+        })
     }
 }
 
 impl Sphere {
     pub fn new(radius: f32) -> Self {
-        Sphere { radius, inv_radius: 1.0 / radius }
+        Sphere {
+            radius,
+            inv_radius: 1.0 / radius,
+        }
     }
 }
 
