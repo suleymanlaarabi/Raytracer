@@ -8,5 +8,6 @@
         "YELLOW": (kind: "flat_color", config: (color: (255, 255, 0))),
         "CYAN": (kind: "flat_color", config: (color: (0, 255, 255))),
         "MAGENTA": (kind: "flat_color", config: (color: (255, 0, 255))),
+        "BROWN": (kind: "flat_color", config: (color: (150, 75, 0))),
     }
 )

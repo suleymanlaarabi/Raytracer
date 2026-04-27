@@ -1,9 +1,9 @@
 (
-    imports: ["./assets/color.ron", "./assets/car.ron"],
+    imports: ["./assets/color.ron", "./assets/car.ron", "./assets/house.ron"],
     camera: (
-        position: (5., 2, 5),
+        position: (8, 4, 8),
         rotation: (0.5, -0.4, 0),
-        resolution: (width: 1920, height: 1080),
+        resolution: (width: 1920, height: 1280),
         fov: 1
     ),
     primitives: [
@@ -15,35 +15,55 @@
             transform: (
                 translation: (0.0, -1.0, 0.0),
             ),
-            material: "@BLUE",
+            material: "@GREEN",
         ),
+        (kind: "House", transform: (translation: (-10, 0, 0))),
+        (kind: "House", transform: (translation: (5, 0, 0))),
         (
             kind: "Car",
             props: (
                 color: "@YELLOW"
             ),
             transform: (
-                translation: (2.5, 0, 0)
+                translation: (-10, -0.6, 3)
             )
         ),
         (
             kind: "Car",
             props: (
-                color: "@RED"
+                color: "@CYAN"
             ),
             transform: (
-                translation: (-2.5, 0, 0)
-            )
-        ),
-        (
-            kind: "Car",
-            props: (
-                color: "@GREEN"
-            ),
-            transform: (
-                translation: (7.5, 0, 0)
+                translation: (5, -0.6, 3)
             )
         )
+        // (
+        //     kind: "Car",
+        //     props: (
+        //         color: "@RED"
+        //     ),
+        //     transform: (
+        //         translation: (-2.5, 0, 0)
+        //     )
+        // ),
+        // (
+        //     kind: "Car",
+        //     props: (
+        //         color: "@GREEN"
+        //     ),
+        //     transform: (
+        //         translation: (7.5, 0, 0)
+        //     )
+        // ),
+        // (
+        //     kind: "Car",
+        //     props: (
+        //         color: "@BLUE"
+        //     ),
+        //     transform: (
+        //         translation: (-7.5, 0, 0)
+        //     )
+        // )
     ],
     lights: [
         (
