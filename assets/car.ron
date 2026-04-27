@@ -39,12 +39,28 @@
                     )
                 ),
                 (
-                    kind: "sphere",
-                    config: (
-                        radius: 1.5
-                    ),
-                    transform: (),
-                    material: "@color"
+                    kind: "cube",
+                    config: (half_size: (2., 0.5, 1.)),
+                    transform: (translation: (0, 0.35, 1), rotation: (0, 0, 0)),
+                    material: "@color",
+                ),
+                (
+                    kind: "cube",
+                    config: (half_size: (1.5, 0.5, 1.)),
+                    transform: (translation: (-0.5, 1, 1), rotation: (0, 0, 0)),
+                    material: "@color",
+                ),
+                (
+                    kind: "cube",
+                    config: (half_size: (0.1, 0.3, 0.3)),
+                    transform: (translation: (1, 1, 1.6), rotation: (0, 0, 0)),
+                    material: "@BLACK",
+                ),
+                (
+                    kind: "cube",
+                    config: (half_size: (0.1, 0.3, 0.3)),
+                    transform: (translation: (1, 1, 0.5), rotation: (0, 0, 0)),
+                    material: "@BLACK",
                 )
             ]
         ),

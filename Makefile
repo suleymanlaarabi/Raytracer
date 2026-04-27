@@ -1,10 +1,10 @@
 
 
 all:
-	cargo build
+	cargo build --release
 	mkdir -p plugins
 	cp ./target/debug/*.so ./plugins
 
-run: all
-	cargo run -- ./config.ron
+run:
+	cargo run --release -- ./config.ron
 	open image.ppm
