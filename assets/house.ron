@@ -5,25 +5,25 @@
             primitives: [
                 (
                     kind: "cube",
-                    config: (half_size: (1, 1, 0.2)),
+                    config: (half_size: (1, 1, 0.21)),
                     transform: (translation: (0, 0, 0)),
                     material: "@WHITE",
                 ),
                 (
                     kind: "cube",
-                    config: (half_size: (0.8, 0.8, 0.21)),
+                    config: (half_size: (0.8, 0.8, 0.22)),
                     transform: (translation: (0, 0, 0)),
                     material: "@BLACK",
                 ),
                 (
                     kind: "cube",
-                    config: (half_size: (0.2, 1, 0.211)),
+                    config: (half_size: (0.2, 1, 0.23)),
                     transform: (translation: (0, 0, 0)),
                     material: "@WHITE",
                 ),
                 (
                     kind: "cube",
-                    config: (half_size: (0.2, 1, 0.2111)),
+                    config: (half_size: (0.2, 1, 0.23)),
                     transform: (rotation: (0, 0, 90)),
                     material: "@WHITE",
                 ),
@@ -33,13 +33,13 @@
             primitives: [
                 (
                     kind: "cube",
-                    config: (half_size: (2, 1, 0.2)),
+                    config: (half_size: (2, 1, 0.21)),
                     transform: (rotation: (0, 0, 90)),
                     material: "@WHITE",
                 ),
                 (
                     kind: "cube",
-                    config: (half_size: (0.21, 0.21, 0.21)),
+                    config: (half_size: (0.21, 0.21, 0.3)),
                     transform: (translation: (-0.5, 0.5, 0)),
                     material: "@BLACK",
                 ),

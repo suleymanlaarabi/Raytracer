@@ -3,7 +3,7 @@
     camera: (
         position: (8, 4, 8),
         rotation: (0.5, -0.4, 0),
-        resolution: (width: 1920, height: 1280),
+        resolution: (width: 1280, height: 720),
         fov: 1
     ),
     primitives: [
@@ -36,7 +36,37 @@
             transform: (
                 translation: (5, -0.6, 3)
             )
-        )
+        ),
+        (
+            kind: "cube",
+            config: (
+                half_size: (100, 0.2, 2)
+            ),
+            transform: (
+                translation: (5, -1.19, 3.5)
+            ),
+            material: "@GRAY"
+        ),
+        (
+            kind: "cube",
+            config: (
+                half_size: (0.2, 4, 0.2)
+            ),
+            transform: (
+                translation: (0, 0, 5.75)
+            ),
+            material: "@GRAY"
+        ),
+        (
+            kind: "cube",
+            config: (
+                half_size: (0.2, 0.1, 0.4)
+            ),
+            transform: (
+                translation: (0, 4, 5.55)
+            ),
+            material: "@WHITE"
+        ),
         // (
         //     kind: "Car",
         //     props: (
@@ -69,8 +99,8 @@
         (
             kind: "point_light",
             config: (
-                position: (x: 0, y: 5, z: 5),
-                intensity: (0.8, 0.8, 0.8),
+                position: (x: 2, y: 10, z: 10),
+                intensity: (1, 1, 1),
             ),
         )
     ],

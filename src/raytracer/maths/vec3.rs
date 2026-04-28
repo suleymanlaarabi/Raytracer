@@ -229,4 +229,3 @@ pub type Translation = Vec3;
 pub type Position = Vec3;
 pub type Direction = Vec3;
 pub type Rotation = Vec3;
-pub type Scale = Vec3;

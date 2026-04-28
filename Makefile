@@ -1,4 +1,5 @@
-
+IMAGE := image.ppm
+CONFIG := config.ron
 
 all:
 	cargo build --release
@@ -6,5 +7,23 @@ all:
 	cp ./target/release/*.so ./plugins
 
 run:
-	cargo run --release -- ./config.ron
-	open image.ppm
+	cargo run --release -- ./$(CONFIG)
+	open ./$(IMAGE)
+
+close-image:
+	@wmctrl -l | grep "$(IMAGE)" | while read id rest; do \
+		wmctrl -ic "$$id" || true; \
+	done || true
+
+watch:
+	@echo "Watching $(CONFIG)..."
+	@while true; do \
+		inotifywait -qq -e close_write,moved_to,create $(CONFIG); \
+		$(MAKE) close-image; \
+		cargo run --release -- ./$(CONFIG) || continue; \
+		if [ -f "$(IMAGE)" ]; then \
+			open ./$(IMAGE) >/dev/null 2>&1 & \
+		else \
+			echo "Erroor: $(IMAGE) not found"; \
+		fi; \
+	done

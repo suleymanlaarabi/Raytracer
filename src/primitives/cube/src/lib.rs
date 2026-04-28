@@ -1,5 +1,6 @@
 use raytracer::maths::vec3::Vec3;
 use raytracer::primitives::Primitive;
+use raytracer::rendering::aabb::Aabb;
 use raytracer::rendering::ray::{CanHit, HitRecord, Ray};
 use raytracer::rendering::transform::Transform;
 use serde::Deserialize;
@@ -9,6 +10,21 @@ pub struct Cube {
 }
 
 impl CanHit for Cube {
+    fn aabb(&self, transform: &Transform) -> Aabb {
+        let h = self.half_size;
+        let mut bbox = Aabb::EMPTY;
+        for &sx in &[-1.0_f32, 1.0] {
+            for &sy in &[-1.0_f32, 1.0] {
+                for &sz in &[-1.0_f32, 1.0] {
+                    let corner = Vec3::from_xyz(sx * h.x, sy * h.y, sz * h.z);
+                    let world = transform.rotate_vec(corner) + transform.translation;
+                    bbox = bbox.extend(world);
+                }
+            }
+        }
+        bbox
+    }
+
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
         let m = &transform.rot_mat;
 

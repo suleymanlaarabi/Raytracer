@@ -1,9 +1,9 @@
-use raytracer::primitives::Primitive;
-use serde::Deserialize;
-
 use raytracer::maths::vec3::{Vec3, dot};
+use raytracer::primitives::Primitive;
+use raytracer::rendering::aabb::Aabb;
 use raytracer::rendering::ray::{CanHit, HitRecord, Ray};
 use raytracer::rendering::transform::Transform;
+use serde::Deserialize;
 
 pub struct Plane {
     pub normal: Vec3,
@@ -16,6 +16,15 @@ impl Plane {
 }
 
 impl CanHit for Plane {
+    fn aabb(&self, transform: &Transform) -> Aabb {
+        let c = transform.translation;
+        let r = 1e4_f32;
+        Aabb::new(
+            Vec3::from_xyz(c.x - r, c.y - r, c.z - r),
+            Vec3::from_xyz(c.x + r, c.y + r, c.z + r),
+        )
+    }
+
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
         let current_normal = transform.rotate_vec(self.normal);
         let denominator = dot(current_normal, ray.direction);
@@ -29,7 +38,7 @@ impl CanHit for Plane {
             return None;
         }
 
-        let point = ray.position + t * ray.direction; // find where the impact lies 
+        let point = ray.position + t * ray.direction; // find where the impact lies
 
         Some(HitRecord {
             t,

@@ -1,6 +1,6 @@
 use crate::{
-    maths::vec3::{Direction, Position},
-    rendering::transform::Transform,
+    maths::vec3::{Direction, Position, Vec3},
+    rendering::{aabb::Aabb, transform::Transform},
 };
 
 pub struct HitRecord {
@@ -29,4 +29,13 @@ impl Ray {
 
 pub trait CanHit {
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord>;
+
+    fn aabb(&self, transform: &Transform) -> Aabb {
+        let c = transform.translation;
+        let r = 1e4_f32;
+        Aabb::new(
+            Vec3::from_xyz(c.x - r, c.y - r, c.z - r),
+            Vec3::from_xyz(c.x + r, c.y + r, c.z + r),
+        )
+    }
 }

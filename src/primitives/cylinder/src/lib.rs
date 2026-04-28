@@ -1,5 +1,6 @@
 use raytracer::maths::vec3::{Vec3, dot};
 use raytracer::primitives::Primitive;
+use raytracer::rendering::aabb::Aabb;
 use raytracer::rendering::ray::{CanHit, HitRecord, Ray};
 use raytracer::rendering::transform::Transform;
 use serde::Deserialize;
@@ -10,6 +11,16 @@ pub struct Cylinder {
 }
 
 impl CanHit for Cylinder {
+    fn aabb(&self, transform: &Transform) -> Aabb {
+        let c = transform.translation;
+        let half_h = self.height / 2.0;
+        let r = (self.radius * self.radius + half_h * half_h).sqrt();
+        Aabb::new(
+            Vec3::from_xyz(c.x - r, c.y - r, c.z - r),
+            Vec3::from_xyz(c.x + r, c.y + r, c.z + r),
+        )
+    }
+
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
         let axis = transform.rotate_vec(Vec3::from_xyz(0.0, 1.0, 0.0));
         let half_h = self.height / 2.0;

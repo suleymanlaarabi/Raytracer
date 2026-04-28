@@ -1,13 +1,12 @@
 use ron::{Map, Value};
 use serde::{Deserialize, Deserializer};
 
-use crate::maths::vec3::{Rotation, Scale, Translation, Vec3};
+use crate::maths::vec3::{Rotation, Translation, Vec3};
 
 #[derive(Clone, Copy)]
 pub struct Transform {
     pub translation: Translation,
     pub rotation: Rotation,
-    pub scale: Scale,
     pub rot_mat: [[f32; 3]; 3],
 }
 
@@ -28,13 +27,11 @@ impl<'de> Deserialize<'de> for Transform {
         struct Raw {
             translation: Option<Vec3>,
             rotation: Option<Vec3>,
-            scale: Option<Vec3>,
         }
         let r = Raw::deserialize(d)?;
         Ok(Transform::new(
             r.translation.unwrap_or(Vec3::ZERO),
             r.rotation.unwrap_or(Vec3::ZERO),
-            r.scale.unwrap_or(Vec3::ZERO),
         ))
     }
 }
@@ -43,22 +40,20 @@ impl Transform {
     pub const ZERO: Transform = Transform {
         translation: Vec3::ZERO,
         rotation: Vec3::ZERO,
-        scale: Vec3::ZERO,
         rot_mat: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
     };
 
-    pub fn new(translation: Translation, rotation: Rotation, scale: Scale) -> Self {
+    pub fn new(translation: Translation, rotation: Rotation) -> Self {
         Transform {
             translation,
             rotation,
-            scale,
             rot_mat: compute_rot_mat(rotation),
         }
     }
 
     #[inline]
     pub fn from_xyz(x: f32, y: f32, z: f32) -> Self {
-        Transform::new(Translation::from_xyz(x, y, z), Vec3::ZERO, Vec3::ZERO)
+        Transform::new(Translation::from_xyz(x, y, z), Vec3::ZERO)
     }
 
     #[inline]
@@ -75,7 +70,6 @@ impl Transform {
         [
             ("translation", self.translation),
             ("rotation", self.rotation),
-            ("scale", self.scale),
         ]
         .into_iter()
         .map(|(k, v)| (Value::String(k.into()), v.to_value()))

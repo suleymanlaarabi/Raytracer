@@ -1,9 +1,9 @@
+use raytracer::maths::vec3::{Vec3, dot};
 use raytracer::primitives::Primitive;
+use raytracer::rendering::aabb::Aabb;
+use raytracer::rendering::ray::{CanHit, HitRecord, Ray};
 use raytracer::rendering::transform::Transform;
 use serde::Deserialize;
-
-use raytracer::maths::vec3::dot;
-use raytracer::rendering::ray::{CanHit, HitRecord, Ray};
 
 pub struct Sphere {
     pub radius: f32,
@@ -11,6 +11,14 @@ pub struct Sphere {
 }
 
 impl CanHit for Sphere {
+    fn aabb(&self, transform: &Transform) -> Aabb {
+        let c = transform.translation;
+        Aabb::new(
+            Vec3::from_xyz(c.x - self.radius, c.y - self.radius, c.z - self.radius),
+            Vec3::from_xyz(c.x + self.radius, c.y + self.radius, c.z + self.radius),
+        )
+    }
+
     fn hit(&self, ray: &Ray, transform: &Transform) -> Option<HitRecord> {
         let oc = ray.position - transform.translation;
         let half_b = dot(oc, ray.direction);
