@@ -73,45 +73,19 @@ impl Aabb {
         )
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn intersect(&self, origin: Vec3, inv_dir: Vec3) -> Option<f32> {
-        let mut tmin = (self.min.x - origin.x) * inv_dir.x;
-        let mut tmax = (self.max.x - origin.x) * inv_dir.x;
+        let t1 = (self.min - origin) * inv_dir;
+        let t2 = (self.max - origin) * inv_dir;
 
-        if inv_dir.x < 0.0 {
-            std::mem::swap(&mut tmin, &mut tmax);
-        }
+        let tmin = Vec3::from_xyz(t1.x.min(t2.x), t1.y.min(t2.y), t1.z.min(t2.z));
+        let tmax = Vec3::from_xyz(t1.x.max(t2.x), t1.y.max(t2.y), t1.z.max(t2.z));
 
-        let mut tmin_y = (self.min.y - origin.y) * inv_dir.y;
-        let mut tmax_y = (self.max.y - origin.y) * inv_dir.y;
+        let t_near = tmin.x.max(tmin.y).max(tmin.z);
+        let t_far = tmax.x.min(tmax.y).min(tmax.z);
 
-        if inv_dir.y < 0.0 {
-            std::mem::swap(&mut tmin_y, &mut tmax_y);
-        }
-
-        if tmin > tmax_y || tmin_y > tmax {
-            return None;
-        }
-
-        tmin = tmin.max(tmin_y);
-        tmax = tmax.min(tmax_y);
-
-        let mut tmin_z = (self.min.z - origin.z) * inv_dir.z;
-        let mut tmax_z = (self.max.z - origin.z) * inv_dir.z;
-
-        if inv_dir.z < 0.0 {
-            std::mem::swap(&mut tmin_z, &mut tmax_z);
-        }
-
-        if tmin > tmax_z || tmin_z > tmax {
-            return None;
-        }
-
-        tmin = tmin.max(tmin_z);
-        tmax = tmax.min(tmax_z);
-
-        if tmax >= tmin && tmax > 0.0 {
-            Some(tmin.max(0.0))
+        if t_near <= t_far && t_far > 0.0 {
+            Some(t_near.max(0.0))
         } else {
             None
         }

@@ -25,7 +25,7 @@ pub struct Renderer {
     buffer: Vec<Color>,
 }
 
-#[inline]
+#[inline(always)]
 fn shade_ray(
     ray: &Ray,
     inv_dir: Vec3,
@@ -37,7 +37,8 @@ fn shade_ray(
     match bvh.traverse(ray, inv_dir, objects) {
         Some((hit, mat)) => {
             light_buf.clear();
-            light_buf.extend(lights.iter().map(|l| l.sample(hit.point)).filter(|s| {
+            for light in lights {
+                let s = light.sample(hit.point);
                 let origin = hit.point + s.direction * 0.0001;
                 let shadow_ray = Ray::new(origin, s.direction);
                 let shadow_inv = Vec3::from_xyz(
@@ -45,8 +46,10 @@ fn shade_ray(
                     1.0 / s.direction.y,
                     1.0 / s.direction.z,
                 );
-                !bvh.hit_any(&shadow_ray, shadow_inv, s.distance, objects)
-            }));
+                if !bvh.hit_any(&shadow_ray, shadow_inv, s.distance, objects) {
+                    light_buf.push(s);
+                }
+            }
             mat.shade(&hit, light_buf)
         }
         None => Color::BLACK,

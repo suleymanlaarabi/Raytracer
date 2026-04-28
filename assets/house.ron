@@ -47,7 +47,6 @@
         ),
         "House": (
             primitives: [
-                // facade
                 (
                     kind: "Window",
                     transform: (translation: (0, 1, 0))

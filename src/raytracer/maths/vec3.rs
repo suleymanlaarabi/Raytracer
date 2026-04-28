@@ -22,28 +22,28 @@ impl Display for Vec3 {
 impl Neg for Vec3 {
     type Output = Vec3;
 
-    #[inline]
+    #[inline(always)]
     fn neg(self) -> Vec3 {
         Vec3::from_xyz(-self.x, -self.y, -self.z)
     }
 }
 
 impl AddAssign for Vec3 {
-    #[inline]
+    #[inline(always)]
     fn add_assign(&mut self, v: Vec3) {
         *self = *self + v;
     }
 }
 
 impl MulAssign<f32> for Vec3 {
-    #[inline]
+    #[inline(always)]
     fn mul_assign(&mut self, t: f32) {
         *self = *self * t;
     }
 }
 
 impl DivAssign<f32> for Vec3 {
-    #[inline]
+    #[inline(always)]
     fn div_assign(&mut self, t: f32) {
         *self = *self / t;
     }
@@ -52,6 +52,7 @@ impl DivAssign<f32> for Vec3 {
 impl Add for Vec3 {
     type Output = Vec3;
 
+    #[inline(always)]
     fn add(self, v: Vec3) -> Vec3 {
         Vec3::from_xyz(self.x + v.x, self.y + v.y, self.z + v.z)
     }
@@ -60,7 +61,7 @@ impl Add for Vec3 {
 impl Sub for Vec3 {
     type Output = Vec3;
 
-    #[inline]
+    #[inline(always)]
     fn sub(self, v: Vec3) -> Vec3 {
         Vec3::from_xyz(self.x - v.x, self.y - v.y, self.z - v.z)
     }
@@ -69,7 +70,7 @@ impl Sub for Vec3 {
 impl Mul for Vec3 {
     type Output = Vec3;
 
-    #[inline]
+    #[inline(always)]
     fn mul(self, v: Vec3) -> Vec3 {
         Vec3::from_xyz(self.x * v.x, self.y * v.y, self.z * v.z)
     }
@@ -78,7 +79,7 @@ impl Mul for Vec3 {
 impl Mul<Vec3> for f32 {
     type Output = Vec3;
 
-    #[inline]
+    #[inline(always)]
     fn mul(self, v: Vec3) -> Vec3 {
         Vec3::from_xyz(self * v.x, self * v.y, self * v.z)
     }
@@ -87,7 +88,7 @@ impl Mul<Vec3> for f32 {
 impl Mul<f32> for Vec3 {
     type Output = Vec3;
 
-    #[inline]
+    #[inline(always)]
     fn mul(self, t: f32) -> Vec3 {
         Vec3::from_xyz(self.x * t, self.y * t, self.z * t)
     }
@@ -96,16 +97,18 @@ impl Mul<f32> for Vec3 {
 impl Div<f32> for Vec3 {
     type Output = Vec3;
 
-    #[inline]
+    #[inline(always)]
     fn div(self, t: f32) -> Vec3 {
         Vec3::from_xyz(self.x / t, self.y / t, self.z / t)
     }
 }
 
+#[inline(always)]
 pub fn dot(u: Vec3, v: Vec3) -> f32 {
     u.x * v.x + u.y * v.y + u.z * v.z
 }
 
+#[inline(always)]
 pub fn cross(u: Vec3, v: Vec3) -> Vec3 {
     Vec3::from_xyz(
         u.y * v.z - u.z * v.y,
@@ -117,7 +120,7 @@ pub fn cross(u: Vec3, v: Vec3) -> Vec3 {
 impl Vec3 {
     pub const ZERO: Vec3 = Vec3::splat(0.);
 
-    #[inline]
+    #[inline(always)]
     pub const fn splat(value: f32) -> Vec3 {
         Vec3 {
             x: value,
@@ -160,28 +163,32 @@ impl Vec3 {
         Value::Map(m)
     }
 
-    #[inline]
+    #[inline(always)]
     pub const fn from_xyz(x: f32, y: f32, z: f32) -> Vec3 {
         Vec3 { x, y, z }
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn length(&self) -> f32 {
         f32::sqrt(self.length_squared())
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn length_squared(&self) -> f32 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn normalize(&self) -> Vec3 {
-        let len = self.length();
-        Vec3::from_xyz(self.x / len, self.y / len, self.z / len)
+        let len_sq = self.length_squared();
+        if len_sq == 0.0 {
+            return Vec3::ZERO;
+        }
+        let inv_len = 1.0 / f32::sqrt(len_sq);
+        Vec3::from_xyz(self.x * inv_len, self.y * inv_len, self.z * inv_len)
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn distance(&self, other: &Vec3) -> f32 {
         ((self.x - other.x) * (self.x - other.x)
             + (self.y - other.y) * (self.y - other.y)
@@ -189,12 +196,12 @@ impl Vec3 {
             .sqrt()
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn project(&self, value: f32) -> Vec3 {
         Vec3::from_xyz(self.x * value, self.y * value, self.z * value)
     }
 
-    #[inline]
+    #[inline(always)]
     pub fn rotate(&self, rotation: Rotation) -> Vec3 {
         let rad_x = rotation.x.to_radians();
         let rad_y = rotation.y.to_radians();
@@ -220,6 +227,8 @@ impl Vec3 {
 
         Vec3::from_xyz(x3, y3, z3)
     }
+
+    #[inline(always)]
     pub fn is_zero(&self) -> bool {
         self.x == 0.0 && self.y == 0.0 && self.z == 0.0
     }
