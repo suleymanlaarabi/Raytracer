@@ -1,5 +1,6 @@
 use std::{
     io::{BufWriter, Write},
+    sync::atomic::{AtomicUsize, Ordering},
     thread,
 };
 
@@ -9,6 +10,8 @@ use crate::{
     rendering::{bvh::Bvh, color::Color, ray::Ray},
     scene::{Object, Scene},
 };
+
+const TILE_SIZE: usize = 16;
 
 pub mod aabb;
 pub mod bvh;
@@ -23,17 +26,15 @@ pub struct Renderer {
 }
 
 #[inline]
-fn render_x(
+fn shade_ray(
     ray: &Ray,
     inv_dir: Vec3,
     bvh: &Bvh,
     objects: &[Object],
     lights: &[Light],
-    row: &mut [Color],
-    x: usize,
     light_buf: &mut Vec<LightSample>,
-) {
-    row[x] = match bvh.traverse(ray, inv_dir, objects) {
+) -> Color {
+    match bvh.traverse(ray, inv_dir, objects) {
         Some((hit, mat)) => {
             light_buf.clear();
             light_buf.extend(lights.iter().map(|l| l.sample(hit.point)).filter(|s| {
@@ -49,7 +50,7 @@ fn render_x(
             mat.shade(&hit, light_buf)
         }
         None => Color::BLACK,
-    };
+    }
 }
 
 impl Renderer {
@@ -68,13 +69,10 @@ impl Renderer {
         let screen_width = self.scene.camera.resolution.width as usize;
         let screen_height = self.scene.camera.resolution.height as usize;
 
-        self.buffer.resize(
-            (self.scene.camera.resolution.width * self.scene.camera.resolution.height) as usize,
-            Color::BLACK,
-        );
+        self.buffer
+            .resize(screen_width * screen_height, Color::BLACK);
 
-        let aspect_ratio =
-            self.scene.camera.resolution.width as f32 / self.scene.camera.resolution.height as f32;
+        let aspect_ratio = screen_width as f32 / screen_height as f32;
         let viewport_height = 2.0_f32;
         let viewport_width = aspect_ratio * viewport_height;
         let focal_length = self.scene.camera.fov;
@@ -93,32 +91,49 @@ impl Renderer {
         let threads = thread::available_parallelism()
             .map(|n| n.get())
             .unwrap_or(1);
-        let rows_per_chunk = screen_height.div_ceil(threads);
+
+        let tiles_x = screen_width.div_ceil(TILE_SIZE);
+        let tiles_y = screen_height.div_ceil(TILE_SIZE);
+        let total_tiles = tiles_x * tiles_y;
+        let tile_counter = AtomicUsize::new(0);
+
+        let buf_addr = self.buffer.as_mut_ptr() as usize;
 
         thread::scope(|s| {
-            for (chunk_idx, rows) in self
-                .buffer
-                .chunks_mut(rows_per_chunk * screen_width)
-                .enumerate()
-            {
-                let start_y = chunk_idx * rows_per_chunk;
+            for _ in 0..threads {
+                let tile_counter = &tile_counter;
                 s.spawn(move || {
+                    let buf = buf_addr as *mut Color;
                     let mut light_buf: Vec<LightSample> = Vec::with_capacity(lights.len());
-                    for (local_y, row) in rows.chunks_mut(screen_width).enumerate() {
-                        let y = start_y + local_y;
-                        let v = 1.0 - y as f32 / (screen_height - 1) as f32;
-                        let v_contrib = lower_left_corner + v * vertical;
+                    loop {
+                        let tile_idx = tile_counter.fetch_add(1, Ordering::Relaxed);
+                        if tile_idx >= total_tiles {
+                            break;
+                        }
+                        let tile_x0 = (tile_idx % tiles_x) * TILE_SIZE;
+                        let tile_y0 = (tile_idx / tiles_x) * TILE_SIZE;
+                        let x_end = (tile_x0 + TILE_SIZE).min(screen_width);
+                        let y_end = (tile_y0 + TILE_SIZE).min(screen_height);
 
-                        for x in 0..screen_width {
-                            let u = x as f32 / (screen_width - 1) as f32;
-                            let direction = (v_contrib + u * horizontal - origin).normalize();
-                            let inv_dir = Vec3::from_xyz(
-                                1.0 / direction.x,
-                                1.0 / direction.y,
-                                1.0 / direction.z,
-                            );
-                            let ray = Ray::new(origin, direction);
-                            render_x(&ray, inv_dir, bvh, objects, lights, row, x, &mut light_buf);
+                        for y in tile_y0..y_end {
+                            let v = 1.0 - y as f32 / (screen_height - 1) as f32;
+                            let v_contrib = lower_left_corner + v * vertical;
+                            for x in tile_x0..x_end {
+                                let u = x as f32 / (screen_width - 1) as f32;
+                                let direction = (v_contrib + u * horizontal - origin).normalize();
+                                let inv_dir = Vec3::from_xyz(
+                                    1.0 / direction.x,
+                                    1.0 / direction.y,
+                                    1.0 / direction.z,
+                                );
+                                let ray = Ray::new(origin, direction);
+                                let color =
+                                    shade_ray(&ray, inv_dir, bvh, objects, lights, &mut light_buf);
+
+                                unsafe {
+                                    *buf.add(y * screen_width + x) = color;
+                                }
+                            }
                         }
                     }
                 });

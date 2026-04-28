@@ -2,3 +2,4 @@
 .idea/
 /image.ppm
 /plugins
+/bench_16k.ron
