@@ -1,11 +1,61 @@
 (
-    imports: ["./assets/color.ron", "./assets/car.ron", "./assets/house.ron"],
+    imports: ["./assets/color.ron", "./assets/car.ron", "./assets/house.ron", "./assets/city.ron"],
     camera: (
         position: (8, 4, 8),
         rotation: (0.5, -0.4, 0),
-        resolution: (width: 1920, height: 1280),
+        resolution: (width: 2880, height: 1620),
         fov: 1
     ),
+    components: {
+        "City": (
+            primitives: [
+                (kind: "House", transform: (translation: (-10, 0, 0))),
+                (kind: "House", transform: (translation: (5, 0, 0))),
+                (
+                    kind: "Car",
+                    props: (
+                        color: "@YELLOW"
+                    ),
+                    transform: (
+                        translation: (-10, -0.6, 3)
+                    )
+                ),
+                (
+                    kind: "Car",
+                    props: (
+                        color: "@CYAN"
+                    ),
+                    transform: (
+                        translation: (5, -0.6, 3)
+                    )
+                ),
+                (
+                    kind: "Road",
+                    transform: (
+                    translation: (5, -1.19, 3.5)
+                    )
+                ),
+                (
+                    kind: "Lamp",
+                    transform: (
+                        translation: (0, 0, 5.75)
+                    )
+                ),
+                (
+                    kind: "Lamp",
+                    transform: (
+                        translation: (8, 0, 5.75)
+                    )
+                ),
+                (
+                    kind: "Lamp",
+                    transform: (
+                        translation: (-8, 0, 5.75)
+                    )
+                )
+            ]
+        )
+    },
     primitives: [
         (
             kind: "plane",
@@ -17,26 +67,7 @@
             ),
             material: "@GREEN",
         ),
-        (kind: "House", transform: (translation: (-10, 0, 0))),
-        (kind: "House", transform: (translation: (5, 0, 0))),
-        (
-            kind: "Car",
-            props: (
-                color: "@YELLOW"
-            ),
-            transform: (
-                translation: (-10, -0.6, 3)
-            )
-        ),
-        (
-            kind: "Car",
-            props: (
-                color: "@CYAN"
-            ),
-            transform: (
-                translation: (5, -0.6, 3)
-            )
-        )
+        (kind: "City", transform: (translation: (0, 0, 0))),
         // (
         //     kind: "Car",
         //     props: (
@@ -69,8 +100,8 @@
         (
             kind: "point_light",
             config: (
-                position: (x: 0, y: 5, z: 5),
-                intensity: (0.8, 0.8, 0.8),
+                position: (x: 2, y: 10, z: 10),
+                intensity: (1, 1, 1),
             ),
         )
     ],
