@@ -197,9 +197,9 @@ impl<'a> BvhBuilder<'a> {
     #[inline(always)]
     fn merge_bin_range(&self, bins: &[Bin], start: usize, end: usize) -> (Aabb, u32) {
         let (mut merged_aabb, mut merged_count) = (Aabb::EMPTY, 0);
-        for i in start..end {
-            merged_aabb = Aabb::merge(merged_aabb, bins[i].bin_bounds);
-            merged_count += bins[i].bin_primitive_count;
+        for bin in bins.iter().take(end).skip(start) {
+            merged_aabb = Aabb::merge(merged_aabb, bin.bin_bounds);
+            merged_count += bin.bin_primitive_count;
         }
         (merged_aabb, merged_count)
     }
