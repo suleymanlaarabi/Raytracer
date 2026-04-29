@@ -1,0 +1,43 @@
+(
+    imports: ["./color.ron"],
+    components: {
+        "Lamp": (
+            primitives: [
+                (
+                    kind: "cube",
+                    config: (
+                        half_size: (0.2, 4, 0.2)
+                    ),
+                    transform: (
+                        translation: (0, 0, 0)
+                    ),
+                    material: "@GRAY"
+                ),
+                (
+                    kind: "cube",
+                    config: (
+                        half_size: (0.2, 0.1, 0.4)
+                    ),
+                    transform: (
+                        translation: (0, 4, -.2)
+                    ),
+                    material: "@WHITE"
+                ),
+            ]
+        ),
+        "Road": (
+            primitives: [
+                (
+                    kind: "cube",
+                    config: (
+                        half_size: (100, 0.2, 2)
+                    ),
+                    transform: (
+                        translation: (0, 0, 0)
+                    ),
+                    material: "@GRAY"
+                ),
+            ]
+        )
+    }
+)

@@ -45,7 +45,7 @@
                 ),
             ]
         ),
-        "House": (
+        "Stage": (
             primitives: [
                 (
                     kind: "Window",
@@ -54,10 +54,6 @@
                 (
                     kind: "Window",
                     transform: (translation: (6, 1, 0))
-                ),
-                (
-                    kind: "Door",
-                    transform: (translation: (3, 0, 0))
                 ),
                 // left wall  (x = -2, z: 0 -> -8)
                 (
@@ -89,6 +85,26 @@
                     transform: (rotation: (0, 0, 90), translation: (3, 0, 0)),
                     material: "@BROWN",
                 ),
+            ]
+        ),
+        "House": (
+            primitives: [
+                (
+                    kind: "Door",
+                    transform: (translation: (3, 0, 0))
+                ),
+                (
+                    kind: "Stage",
+                    transform: (translation: (0, 0, 0))
+                ),
+                (
+                    kind: "Stage",
+                    transform: (translation: (0, 4, 0))
+                ),
+                (
+                    kind: "Stage",
+                    transform: (translation: (0, 8, 0))
+                )
             ]
         )
     }

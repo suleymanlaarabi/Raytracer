@@ -1,9 +1,9 @@
 (
-    imports: ["./assets/color.ron", "./assets/car.ron", "./assets/house.ron"],
+    imports: ["./assets/color.ron", "./assets/car.ron", "./assets/house.ron", "./assets/city.ron"],
     camera: (
         position: (8, 4, 8),
         rotation: (0.5, -0.4, 0),
-        resolution: (width: 2880, height: 1800),
+        resolution: (width: 2880, height: 1620),
         fov: 1
     ),
     components: {
@@ -30,63 +30,29 @@
                     )
                 ),
                 (
-                    kind: "cube",
-                    config: (
-                        half_size: (100, 0.2, 2)
-                    ),
+                    kind: "Road",
                     transform: (
-                        translation: (5, -1.19, 3.5)
-                    ),
-                    material: "@GRAY"
+                    translation: (5, -1.19, 3.5)
+                    )
                 ),
                 (
-                    kind: "cube",
-                    config: (
-                        half_size: (0.2, 4, 0.2)
-                    ),
+                    kind: "Lamp",
                     transform: (
                         translation: (0, 0, 5.75)
-                    ),
-                    material: "@GRAY"
+                    )
                 ),
                 (
-                    kind: "cube",
-                    config: (
-                        half_size: (0.2, 0.1, 0.4)
-                    ),
+                    kind: "Lamp",
                     transform: (
-                        translation: (0, 4, 5.55)
-                    ),
-                    material: "@WHITE"
+                        translation: (8, 0, 5.75)
+                    )
                 ),
-            ]
-        ),
-        "Country": (
-            primitives: [
-                (kind: "City", transform: (translation: (0, 0, 0))),
-                (kind: "City", transform: (translation: (0, 0, -15))),
-                (kind: "City", transform: (translation: (0, 0, -30))),
-                (kind: "City", transform: (translation: (0, 0, -45))),
-                (kind: "City", transform: (translation: (0, 0, -60))),
-            ]
-        ),
-        "Continent": (
-            primitives: [
-                (kind: "Country", transform: (translation: (0, 0, 0))),
-                (kind: "Country", transform: (translation: (0, 0, -100))),
-                (kind: "Country", transform: (translation: (0, 0, -200))),
-                (kind: "Country", transform: (translation: (0, 0, -300))),
-                (kind: "Country", transform: (translation: (0, 0, -400))),
-            ]
-        ),
-        "Earth": (
-            primitives: [
-                (kind: "Continent", transform: (translation: (0, 0, 0))),
-                (kind: "Continent", transform: (translation: (0, 0, -400))),
-                (kind: "Continent", transform: (translation: (0, 0, -800))),
-                (kind: "Continent", transform: (translation: (0, 0, -1200))),
-                (kind: "Continent", transform: (translation: (0, 0, -1600))),
-                (kind: "Continent", transform: (translation: (0, 0, -2000))),
+                (
+                    kind: "Lamp",
+                    transform: (
+                        translation: (-8, 0, 5.75)
+                    )
+                )
             ]
         )
     },
@@ -101,12 +67,7 @@
             ),
             material: "@GREEN",
         ),
-        (kind: "Earth", transform: (translation: (0, 0, 0))),
-        (kind: "Earth", transform: (translation: (0, 0, -2000))),
-        (kind: "Earth", transform: (translation: (0, 0, -4000))),
-        (kind: "Earth", transform: (translation: (0, 0, -6000))),
-        (kind: "Earth", transform: (translation: (0, 0, -8000))),
-        (kind: "Earth", transform: (translation: (0, 0, -10000))),
+        (kind: "City", transform: (translation: (0, 0, 0))),
         // (
         //     kind: "Car",
         //     props: (
