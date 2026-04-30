@@ -3,3 +3,4 @@
 /image.ppm
 /plugins
 /bench_16k.ron
+**/*.DS_Store
