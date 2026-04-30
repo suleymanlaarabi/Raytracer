@@ -20,9 +20,9 @@ pub mod ray;
 pub mod transform;
 
 pub struct Renderer {
-    scene: Scene,
+    pub scene: Scene,
     bvh: Bvh,
-    buffer: Vec<Color>,
+    pub buffer: Vec<Color>,
 }
 
 #[inline(always)]
@@ -101,6 +101,7 @@ impl Renderer {
         let tile_counter = AtomicUsize::new(0);
 
         let buf_addr = self.buffer.as_mut_ptr() as usize;
+        let ambient = self.scene.ambient_light;
 
         thread::scope(|s| {
             for _ in 0..threads {
@@ -130,8 +131,12 @@ impl Renderer {
                                     1.0 / direction.z,
                                 );
                                 let ray = Ray::new(origin, direction);
-                                let color =
+                                let mut color =
                                     shade_ray(&ray, inv_dir, bvh, objects, lights, &mut light_buf);
+
+                                color.r = f32::clamp((color.r as f32) * ambient, 0., 255.) as u8;
+                                color.g = f32::clamp((color.g as f32) * ambient, 0., 255.) as u8;
+                                color.b = f32::clamp((color.b as f32) * ambient, 0., 255.) as u8;
 
                                 unsafe {
                                     *buf.add(y * screen_width + x) = color;

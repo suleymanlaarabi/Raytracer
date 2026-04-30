@@ -14,8 +14,7 @@ all:
 	cp ./target/release/*.$(LIB_EXT) ./plugins
 
 run:
-	cargo run --release -- ./$(CONFIG)
-	open ./$(IMAGE)
+	cargo run --release -- ./$(CONFIG) --sfml
 
 close-image:
 	@wmctrl -l | grep "$(IMAGE)" | while read id rest; do \
