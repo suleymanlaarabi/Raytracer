@@ -27,33 +27,30 @@ impl PluginLoader {
     }
 
     fn primitive_path(kind: &str) -> PathBuf {
-        if cfg!(target_os = "macos") {
-            return PathBuf::from("plugins").join(format!("libraytracer_{kind}.dylib"));
-        }
-        if cfg!(target_os = "windows") {
-            return PathBuf::from("plugins").join(format!("libraytracer_{kind}.dll"));
-        }
-        PathBuf::from("plugins").join(format!("libraytracer_{kind}.so"))
+        #[cfg(target_os = "macos")]
+        return PathBuf::from("plugins").join(format!("libraytracer_{kind}.dylib"));
+        #[cfg(target_os = "windows")]
+        return PathBuf::from("plugins").join(format!("libraytracer_{kind}.dll"));
+        #[cfg(target_os = "linux")]
+        return PathBuf::from("plugins").join(format!("libraytracer_{kind}.so"));
     }
 
     fn material_path(kind: &str) -> PathBuf {
-        if cfg!(target_os = "macos") {
-            return PathBuf::from("plugins").join(format!("libraytracer_material_{kind}.dylib"));
-        }
-        if cfg!(target_os = "windows") {
-            return PathBuf::from("plugins").join(format!("libraytracer_material_{kind}.dll"));
-        }
-        PathBuf::from("plugins").join(format!("libraytracer_material_{kind}.so"))
+        #[cfg(target_os = "macos")]
+        return PathBuf::from("plugins").join(format!("libraytracer_material_{kind}.dylib"));
+        #[cfg(target_os = "windows")]
+        return PathBuf::from("plugins").join(format!("libraytracer_material_{kind}.dll"));
+        #[cfg(target_os = "linux")]
+        return PathBuf::from("plugins").join(format!("libraytracer_material_{kind}.so"));
     }
 
     fn light_path(kind: &str) -> PathBuf {
-        if cfg!(target_os = "macos") {
-            return PathBuf::from("plugins").join(format!("libraytracer_light_{kind}.dylib"));
-        }
-        if cfg!(target_os = "windows") {
-            return PathBuf::from("plugins").join(format!("libraytracer_light_{kind}.dll"));
-        }
-        PathBuf::from("plugins").join(format!("libraytracer_light_{kind}.so"))
+        #[cfg(target_os = "macos")]
+        return PathBuf::from("plugins").join(format!("libraytracer_light_{kind}.dylib"));
+        #[cfg(target_os = "windows")]
+        return PathBuf::from("plugins").join(format!("libraytracer_light_{kind}.dll"));
+        #[cfg(target_os = "linux")]
+        return PathBuf::from("plugins").join(format!("libraytracer_light_{kind}.so"));
     }
 
     pub fn load_primitive(
