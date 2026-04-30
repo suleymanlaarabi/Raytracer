@@ -117,6 +117,7 @@ fn create_window(w: u32, h: u32) -> FBox<RenderWindow> {
     )
     .expect("Unable to create window");
     window.set_framerate_limit(60);
+
     window
 }
 

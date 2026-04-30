@@ -6,6 +6,7 @@
         resolution: (width: 1920, height: 1080),
         fov: 1
     ),
+    ambient: 1.,
     components: {
         "City": (
             primitives: [

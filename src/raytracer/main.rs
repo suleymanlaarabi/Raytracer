@@ -47,6 +47,7 @@ struct SceneDesc {
     primitives: Vec<PrimitiveDesc>,
     lights: Vec<LightDesc>,
     camera: Camera,
+    ambient: Option<f32>,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -66,7 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let parsed = config.try_deserialize::<SceneDesc>()?;
 
     let mut loader = PluginLoader::new();
-    let mut scene = Scene::new(parsed.camera);
+    let mut scene = Scene::new(parsed.camera, parsed.ambient.unwrap_or(1.));
 
     for mut desc in parsed.primitives {
         let primitive =

@@ -11,14 +11,16 @@ pub type Object = (Primitive, Material, Transform);
 pub struct Scene {
     pub objects: Vec<Object>,
     pub lights: Vec<Light>,
+    pub ambient_light: f32,
     pub camera: Camera,
 }
 
 impl Scene {
-    pub fn new(camera: Camera) -> Self {
+    pub fn new(camera: Camera, ambient: f32) -> Self {
         Self {
             objects: Vec::new(),
             lights: Vec::new(),
+            ambient_light: ambient,
             camera,
         }
     }
