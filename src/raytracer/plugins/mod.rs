@@ -27,7 +27,7 @@ impl PluginLoader {
     }
 
     fn primitive_path(kind: &str) -> PathBuf {
-        if cfg!(target_os = "macos")  {
+        if cfg!(target_os = "macos") {
             return PathBuf::from("plugins").join(format!("libraytracer_{kind}.dylib"));
         }
         if cfg!(target_os = "windows") {
@@ -37,7 +37,7 @@ impl PluginLoader {
     }
 
     fn material_path(kind: &str) -> PathBuf {
-        if cfg!(target_os = "macos")  {
+        if cfg!(target_os = "macos") {
             return PathBuf::from("plugins").join(format!("libraytracer_material_{kind}.dylib"));
         }
         if cfg!(target_os = "windows") {
@@ -47,7 +47,7 @@ impl PluginLoader {
     }
 
     fn light_path(kind: &str) -> PathBuf {
-        if cfg!(target_os = "macos")  {
+        if cfg!(target_os = "macos") {
             return PathBuf::from("plugins").join(format!("libraytracer_light_{kind}.dylib"));
         }
         if cfg!(target_os = "windows") {
