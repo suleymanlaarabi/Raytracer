@@ -33,7 +33,7 @@ impl SfmlPreview {
         self.renderer.render();
 
         let mut tex_buf = display::TextureBuffer::new(render_w, render_h);
-        tex_buf.update(&mut self.renderer.buffer);
+        tex_buf.update(&self.renderer.buffer);
 
         let scale = Vector2f::new(
             display_w as f32 / render_w as f32,
@@ -97,7 +97,7 @@ impl SfmlPreview {
             controls::apply_keyboard(cam, dt);
             controls::apply_mouse(cam, dx, dy);
             self.renderer.render();
-            tex_buf.update(&mut self.renderer.buffer);
+            tex_buf.update(&self.renderer.buffer);
             let mut sprite = Sprite::with_texture(tex_buf.texture());
             sprite.set_scale(scale);
             window.clear(SfColor::BLACK);
