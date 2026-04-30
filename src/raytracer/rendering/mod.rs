@@ -20,9 +20,9 @@ pub mod ray;
 pub mod transform;
 
 pub struct Renderer {
-    scene: Scene,
+    pub scene: Scene,
     bvh: Bvh,
-    buffer: Vec<Color>,
+    pub buffer: Vec<Color>,
 }
 
 #[inline(always)]

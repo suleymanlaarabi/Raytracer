@@ -7,17 +7,18 @@ use raytracer::rendering::Renderer;
 use raytracer::rendering::transform::Transform;
 use raytracer::scene::Scene;
 use raytracer::scene::preprocessor;
+use raytracer::sfml;
 use serde::Deserialize;
 use std::env::args;
 use std::error::Error;
 use std::path::Path;
 
-fn get_config_file() -> Result<String, RaytracerError> {
+fn get_config_file() -> Result<(String, bool), RaytracerError> {
     let mut args = args().collect::<Vec<String>>();
-    if args.len() != 2 {
+    if args.len() < 2 {
         return Err(IncorrectArguments);
     }
-    Ok(args.remove(1))
+    Ok((args.remove(1), args.contains(&"--sfml".to_string())))
 }
 
 #[derive(Deserialize)]
@@ -49,7 +50,7 @@ struct SceneDesc {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let config_file = get_config_file()?;
+    let (config_file, is_sfml) = get_config_file()?;
 
     let base_dir = Path::new(&config_file).parent().unwrap_or(Path::new("."));
     let raw = std::fs::read_to_string(&config_file)?;
@@ -82,8 +83,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     let mut renderer = Renderer::from_scene(scene);
-
-    renderer.render_to_file("image.ppm");
+    if is_sfml {
+        sfml::SfmlPreview::new(renderer).run();
+    } else {
+        renderer.render_to_file("image.ppm");
+    }
 
     Ok(())
 }
