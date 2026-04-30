@@ -1,10 +1,17 @@
 IMAGE := image.ppm
 CONFIG := config.ron
 
+UNAME := $(shell uname)
+ifeq ($(UNAME), Darwin)
+    LIB_EXT := dylib
+else
+    LIB_EXT := so
+endif
+
 all:
 	cargo build --release
 	mkdir -p plugins
-	cp ./target/release/*.so ./plugins
+	cp ./target/release/*.$(LIB_EXT) ./plugins
 
 run:
 	cargo run --release -- ./$(CONFIG)
@@ -27,3 +34,11 @@ watch:
 			echo "Erroor: $(IMAGE) not found"; \
 		fi; \
 	done
+
+clean:
+	cargo clean
+
+fclean: clean
+	$(RM) -r target
+
+re: fclean all
