@@ -53,6 +53,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
+      - name: Install SFML dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libsfml-dev \
+            libfreetype6-dev \
+            libopenal-dev \
+            libflac-dev \
+            libvorbis-dev \
+            libudev-dev \
+            libx11-dev \
+            libxrandr-dev \
+            libxcursor-dev
+
       - name: Check formatting
         run: cargo fmt --all -- --check
 
