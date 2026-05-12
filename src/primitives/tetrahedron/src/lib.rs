@@ -81,7 +81,7 @@ impl CanHit for Tetrahedron {
             let s = local_origin - v0;
             let u = f * dot(s, h);
 
-            if u < 0.0 || u > 1.0 {
+            if !(0.0..=1.0).contains(&u) {
                 continue;
             }
 
