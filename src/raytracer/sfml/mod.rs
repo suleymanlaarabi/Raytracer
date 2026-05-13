@@ -28,6 +28,12 @@ impl SfmlPreview {
 
         let render_w = (display_w / 2).max(1);
         let render_h = (display_h / 2).max(1);
+        let center = Vector2i::new(display_w as i32 / 2, display_h as i32 / 2);
+
+        let mut window = create_window(display_w, display_h);
+        let mut mouse_captured = true;
+        set_capture(&mut window, center, true);
+
         self.renderer.scene.camera.resolution.width = render_w;
         self.renderer.scene.camera.resolution.height = render_h;
         self.renderer.render();
@@ -39,11 +45,6 @@ impl SfmlPreview {
             display_w as f32 / render_w as f32,
             display_h as f32 / render_h as f32,
         );
-        let center = Vector2i::new(display_w as i32 / 2, display_h as i32 / 2);
-
-        let mut window = create_window(display_w, display_h);
-        let mut mouse_captured = true;
-        set_capture(&mut window, center, true);
 
         let font = Font::from_memory_static(FONT_BYTES).expect("Police introuvable");
         let mut fps_text = Text::new("FPS: 0", &font, 18);
@@ -123,6 +124,7 @@ fn create_window(w: u32, h: u32) -> FBox<RenderWindow> {
 
 fn set_capture(window: &mut RenderWindow, center: Vector2i, captured: bool) {
     window.set_mouse_cursor_visible(!captured);
+    #[cfg(not(target_os = "macos"))]
     window.set_mouse_cursor_grabbed(captured);
     if captured {
         window.set_mouse_position(center);

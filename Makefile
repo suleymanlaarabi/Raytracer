@@ -4,17 +4,21 @@ CONFIG := config.ron
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
     LIB_EXT := dylib
+    RUN_FEATURES :=
+    RUN_ARGS := ./$(CONFIG)
 else
     LIB_EXT := so
+    RUN_FEATURES := --features sfml-preview
+    RUN_ARGS := ./$(CONFIG) --sfml
 endif
 
 all:
-	cargo build --release
+	cargo build --release --workspace
 	mkdir -p plugins
 	cp ./target/release/*.$(LIB_EXT) ./plugins
 
 run:
-	cargo run --release -- ./$(CONFIG) --sfml
+	cargo run --release -p raytracer $(RUN_FEATURES) -- $(RUN_ARGS)
 
 close-image:
 	@wmctrl -l | grep "$(IMAGE)" | while read id rest; do \

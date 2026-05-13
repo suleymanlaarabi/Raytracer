@@ -7,6 +7,7 @@ use raytracer::rendering::Renderer;
 use raytracer::rendering::transform::Transform;
 use raytracer::scene::Scene;
 use raytracer::scene::preprocessor;
+#[cfg(feature = "sfml-preview")]
 use raytracer::sfml;
 use serde::Deserialize;
 use std::env::args;
@@ -85,6 +86,19 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut renderer = Renderer::from_scene(scene);
     if is_sfml {
+        #[cfg(target_os = "macos")]
+        {
+            eprintln!(
+                "SFML preview is currently unstable on macOS. Rendering to image.ppm instead."
+            );
+            renderer.render_to_file("image.ppm");
+            return Ok(());
+        }
+
+        #[cfg(all(not(target_os = "macos"), not(feature = "sfml-preview")))]
+        return Err("This binary was built without SFML support. Rebuild with --features sfml-preview.".into());
+
+        #[cfg(all(feature = "sfml-preview", not(target_os = "macos")))]
         sfml::SfmlPreview::new(renderer).run();
     } else {
         renderer.render_to_file("image.ppm");

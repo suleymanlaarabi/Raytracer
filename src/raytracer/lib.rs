@@ -7,4 +7,5 @@ pub mod plugins;
 pub mod primitives;
 pub mod rendering;
 pub mod scene;
+#[cfg(feature = "sfml-preview")]
 pub mod sfml;
