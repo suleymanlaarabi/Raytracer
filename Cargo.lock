@@ -496,6 +496,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "raytracer_torus"
+version = "0.1.0"
+dependencies = [
+ "raytracer",
+ "ron",
+ "serde",
+]
+
+[[package]]
 name = "ron"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

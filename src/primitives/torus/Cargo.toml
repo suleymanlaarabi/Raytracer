@@ -1,10 +1,10 @@
 [package]
-name = "raytracer_sphere"
+name = "raytracer_torus"
 version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "raytracer_sphere"
+name = "raytracer_torus"
 crate-type = ["cdylib"]
 
 [dependencies]

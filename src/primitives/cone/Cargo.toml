@@ -10,4 +10,4 @@ crate-type = ["cdylib"]
 [dependencies]
 ron = "0.12"
 serde = { version = "1", features = ["derive"] }
-raytracer = { path = "../../raytracer" }
+raytracer = { path = "../../raytracer", default-features = false }
