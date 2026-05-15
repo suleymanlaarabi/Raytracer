@@ -96,7 +96,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         #[cfg(all(not(target_os = "macos"), not(feature = "sfml-preview")))]
-        return Err("This binary was built without SFML support. Rebuild with --features sfml-preview.".into());
+        return Err(
+            "This binary was built without SFML support. Rebuild with --features sfml-preview."
+                .into(),
+        );
 
         #[cfg(all(feature = "sfml-preview", not(target_os = "macos")))]
         sfml::SfmlPreview::new(renderer).run();
